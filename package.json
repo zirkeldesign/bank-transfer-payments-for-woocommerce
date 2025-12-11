@@ -9,7 +9,13 @@
     "build:admin": "echo 'Build admin assets here'",
     "build:frontend": "echo 'Build frontend assets here'",
     "format": "prettier --write \"assets/**/*.{js,ts,css,scss}\"",
-    "lint": "eslint assets/**/*.{js,ts}"
+    "lint": "eslint assets/**/*.{js,ts}",
+    "translate": "bun translate:pot && bun translate:update",
+    "translate:pot": "wp i18n make-pot . ./languages/wc-stripe-bank-transfers.pot --include='includes' --exclude='node_modules,vendor,tests' --domain='wc-stripe-bank-transfers'",
+    "translate:update": "for file in ./languages/*.po; do wp i18n update-po ./languages/wc-stripe-bank-transfers.pot $file; done",
+    "translate:compile": "bun translate:mo && bun translate:js",
+    "translate:js": "wp i18n make-json ./languages --pretty-print --no-purge",
+    "translate:mo": "wp i18n make-mo ./languages ./languages"
   },
   "devDependencies": {
     "@types/bun": "latest",

@@ -5,14 +5,14 @@
  * Plugin URI: https://github.com/yourusername/woocommerce-stripe-bank-transfers
  * Description: Accept bank transfer payments via Stripe. Customers receive individual bank account details for each order.
  * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Author: zirkel.design
+ * Author URI: https://zirkel.design
  * Text Domain: wc-stripe-bank-transfers
  * Domain Path: /languages
  * Requires at least: 5.8
- * Requires PHP: 7.4
- * WC requires at least: 5.0
- * WC tested up to: 8.0
+ * Requires PHP: 8.1
+ * WC requires at least: 9.0
+ * WC tested up to: 10.4
  * License: GPL v3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -45,14 +45,6 @@ if (file_exists(WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'vendor/autoload.php')) {
 }
 
 /**
- * Load plugin classes
- */
-require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-stripe-integration.php';
-require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-wc-gateway-stripe-bank-transfer.php';
-require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-stripe-webhook-handler.php';
-require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-customer-balance-display.php';
-
-/**
  * Initialize the payment gateway
  */
 function wc_stripe_bank_transfers_init()
@@ -61,6 +53,14 @@ function wc_stripe_bank_transfers_init()
     if (! class_exists('WC_Payment_Gateway')) {
         return;
     }
+
+    /**
+     * Load plugin classes after WooCommerce is available
+     */
+    require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-stripe-integration.php';
+    require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-wc-gateway-stripe-bank-transfer.php';
+    require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-stripe-webhook-handler.php';
+    require_once WC_STRIPE_BANK_TRANSFERS_PLUGIN_DIR . 'includes/class-customer-balance-display.php';
 
     /**
      * Add the gateway to WooCommerce
@@ -116,6 +116,15 @@ function wc_stripe_bank_transfers_init()
 }
 
 add_action('plugins_loaded', 'wc_stripe_bank_transfers_init', 11);
+
+/**
+ * Declare HPOS compatibility
+ */
+add_action('before_woocommerce_init', function () {
+    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+    }
+});
 
 /**
  * Plugin activation

@@ -107,25 +107,17 @@ class WC_Stripe_Plugin_Integration
      */
     private static function get_woo_stripe_payment_credentials($testmode)
     {
-        // This plugin stores settings in wp_options
-        $mode = $testmode ? 'test' : 'live';
+        // This plugin stores settings in a serialized array in woocommerce_stripe_api_settings
+        $settings = get_option('woocommerce_stripe_api_settings', []);
 
-        // Try to get settings from options
-        $secret_key = get_option("_stripe_{$mode}_secret_key");
-        $publishable_key = get_option("_stripe_{$mode}_publishable_key");
-
-        // Alternative: Check gateway settings
-        if (! $secret_key) {
-            $gateway_settings = get_option('woocommerce_stripe_cc_settings', []);
-
-            if ($testmode) {
-                $secret_key = $gateway_settings['test_secret_key'] ?? '';
-                $publishable_key = $gateway_settings['test_publishable_key'] ?? '';
-            } else {
-                $secret_key = $gateway_settings['secret_key'] ?? '';
-                $publishable_key = $gateway_settings['publishable_key'] ?? '';
-            }
+        if (empty($settings)) {
+            return false;
         }
+
+        // Keys are stored as: secret_key_test, secret_key_live, publishable_key_test, publishable_key_live
+        $mode_suffix = $testmode ? 'test' : 'live';
+        $secret_key = $settings['secret_key_' . $mode_suffix] ?? '';
+        $publishable_key = $settings['publishable_key_' . $mode_suffix] ?? '';
 
         if ($secret_key) {
             return [

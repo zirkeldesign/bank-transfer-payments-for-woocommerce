@@ -45,6 +45,7 @@ class WC_Gateway_Stripe_Bank_Transfer extends WC_Payment_Gateway
         $this->test_secret_key = $this->get_option('test_secret_key');
         $this->live_secret_key = $this->get_option('live_secret_key');
         $this->transfer_type = $this->get_option('transfer_type', 'us_bank_account');
+        $this->default_currency = $this->get_option('default_currency', 'eur');
         $this->debug_mode = $this->get_option('debug_mode') === 'yes';
 
         // Check for existing Stripe plugin integration
@@ -176,6 +177,20 @@ class WC_Gateway_Stripe_Bank_Transfer extends WC_Payment_Gateway
                     'gb_bank_account' => __('UK Bank Account (Bacs)', 'wc-stripe-bank-transfers'),
                     'jp_bank_account' => __('Japanese Bank Account', 'wc-stripe-bank-transfers'),
                     'mx_bank_account' => __('Mexican Bank Account (SPEI)', 'wc-stripe-bank-transfers'),
+                ],
+            ],
+            'default_currency' => [
+                'title' => __('Default Currency for Virtual Bank Accounts', 'wc-stripe-bank-transfers'),
+                'type' => 'select',
+                'description' => __('Currency used when creating virtual bank account details for customers.', 'wc-stripe-bank-transfers'),
+                'default' => 'eur',
+                'desc_tip' => true,
+                'options' => [
+                    'usd' => __('US Dollar (USD)', 'wc-stripe-bank-transfers'),
+                    'eur' => __('Euro (EUR)', 'wc-stripe-bank-transfers'),
+                    'gbp' => __('British Pound (GBP)', 'wc-stripe-bank-transfers'),
+                    'jpy' => __('Japanese Yen (JPY)', 'wc-stripe-bank-transfers'),
+                    'mxn' => __('Mexican Peso (MXN)', 'wc-stripe-bank-transfers'),
                 ],
             ],
             'debug_mode' => [
