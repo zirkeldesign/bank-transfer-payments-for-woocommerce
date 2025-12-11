@@ -1,0 +1,41 @@
+{
+    "name": "zirkeldesign/woocommerce-stripe-bank-transfers",
+    "description": "WooCommerce payment gateway for Stripe bank transfers",
+    "license": "GPL-3.0-or-later",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Daniel Sturm",
+            "email": "d.sturm@zirkeldesign.de"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "stripe/stripe-php": "^10.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "pestphp/pest": "^2.0",
+        "wp-coding-standards/wpcs": "^3.0",
+        "yoast/phpunit-polyfills": "^2.0"
+    },
+    "autoload": {
+        "classmap": [
+            "includes/"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "format": "pint",
+        "lint": "pint --test",
+        "phpcbf": "phpcbf --standard=WordPress includes/ woocommerce-stripe-bank-transfers.php",
+        "phpcs": "phpcs --standard=WordPress includes/ woocommerce-stripe-bank-transfers.php",
+        "test": "pest",
+        "test:coverage": "pest --coverage"
+    }
+}

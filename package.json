@@ -1,0 +1,24 @@
+{
+  "name": "woocommerce-stripe-bank-transfers",
+  "version": "1.0.0",
+  "description": "WooCommerce payment gateway for Stripe bank transfers",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run build --watch",
+    "build": "bun run build:admin && bun run build:frontend",
+    "build:admin": "echo 'Build admin assets here'",
+    "build:frontend": "echo 'Build frontend assets here'",
+    "format": "prettier --write \"assets/**/*.{js,ts,css,scss}\"",
+    "lint": "eslint assets/**/*.{js,ts}"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

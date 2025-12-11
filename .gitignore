@@ -1,0 +1,44 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# WordPress
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/backups/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+composer.phar
+
+# NPM
+package-lock.json
+yarn.lock
+
+# Build files
+/build/
+/dist/
+
+# Testing
+/tests/tmp/
+/tests/reports/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.bak
+*.swp
+*~
