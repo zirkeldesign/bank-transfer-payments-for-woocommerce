@@ -403,10 +403,12 @@ msgid "An error occurred while processing your payment. Please try again."
 msgstr "Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
 
 #: src/Gateway/BankTransferGateway.php:718
+#: src/Gateway/BankTransferGateway.php:903
 msgid "Bank Transfer Instructions"
 msgstr "Anweisungen zur Banküberweisung"
 
 #: src/Gateway/BankTransferGateway.php:719
+#: src/Gateway/BankTransferGateway.php:904
 msgid "Please transfer the funds to the following bank account:"
 msgstr "Bitte überweisen Sie den Betrag auf das folgende Bankkonto:"
 
@@ -449,17 +451,18 @@ msgid "View Full Instructions"
 msgstr "Vollständige Anweisungen ansehen"
 
 #: src/Gateway/BankTransferGateway.php:760
+#: src/Gateway/BankTransferGateway.php:922
 msgid "Important: Please include your order number as the payment reference."
 msgstr "Wichtig: Bitte geben Sie Ihre Bestellnummer als Verwendungszweck an."
 
-#: src/Plugin.php:62
-#: src/Plugin.php:79
+#: src/Plugin.php:90
+#: src/Plugin.php:125
 msgctxt "Order status"
 msgid "Awaiting Bank Transfer"
 msgstr "Warten auf Banküberweisung"
 
 #. translators: %s: Order count.
-#: src/Plugin.php:68
+#: src/Plugin.php:96
 #, php-format
 msgid "Awaiting bank transfer <span class=\"count\">(%s)</span>"
 msgid_plural "Awaiting bank transfer <span class=\"count\">(%s)</span>"
@@ -635,3 +638,39 @@ msgstr "Bankleitzahl:"
 #: src/Gateway/BankTransferGateway.php:821
 msgid "Branch Code:"
 msgstr "Filialnummer:"
+
+#: src/Email/AwaitingTransferEmail.php:31
+msgid "Bank transfer details"
+msgstr "Bankverbindung für die Überweisung"
+
+#: src/Email/AwaitingTransferEmail.php:32
+msgid "Sent to the customer when an order is waiting for a bank transfer, containing the account details to pay into."
+msgstr "Wird an die Kundschaft gesendet, wenn eine Bestellung auf eine Banküberweisung wartet, inklusive der Bankverbindung für die Zahlung."
+
+#: src/Email/AwaitingTransferEmail.php:52
+msgid "Your order {order_number} — bank transfer details"
+msgstr "Ihre Bestellung {order_number} – Bankverbindung für die Überweisung"
+
+#: src/Email/AwaitingTransferEmail.php:57
+msgid "Please transfer the amount due"
+msgstr "Bitte überweisen Sie den offenen Betrag"
+
+#: src/Email/AwaitingTransferEmail.php:128
+msgid "Your order ships as soon as the transfer arrives. Bank transfers usually take one to three business days."
+msgstr "Ihre Bestellung wird versendet, sobald die Überweisung eingegangen ist. Banküberweisungen dauern in der Regel ein bis drei Werktage."
+
+#. translators: %s: Customer first name.
+#: templates/emails/customer-awaiting-transfer.php:20
+#: templates/emails/plain/customer-awaiting-transfer.php:19
+#, php-format
+msgid "Hi %s,"
+msgstr "Guten Tag %s,"
+
+#: templates/emails/customer-awaiting-transfer.php:24
+#: templates/emails/plain/customer-awaiting-transfer.php:24
+msgid "Thanks for your order. Please transfer the amount due using the bank details below — your order is reserved until the money arrives."
+msgstr "Vielen Dank für Ihre Bestellung. Bitte überweisen Sie den offenen Betrag auf die unten stehende Bankverbindung – Ihre Bestellung ist bis zum Zahlungseingang für Sie reserviert."
+
+#: templates/emails/plain/customer-awaiting-transfer.php:30
+msgid "Payment reference:"
+msgstr "Verwendungszweck:"

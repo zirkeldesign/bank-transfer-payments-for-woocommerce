@@ -868,12 +868,58 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
         $bankDetailsJson = $order->get_meta('_stripe_bank_transfer_details');
 
-        if (! empty($bankDetailsJson) && ! $plain_text) {
-            $bankDetails = json_decode($bankDetailsJson, true);
-            if (is_array($bankDetails)) {
-                $this->display_bank_transfer_instructions($bankDetails, $order, true);
-            }
+        if (empty($bankDetailsJson)) {
+            return;
         }
+
+        $bankDetails = json_decode($bankDetailsJson, true);
+
+        if (! is_array($bankDetails)) {
+            return;
+        }
+
+        if ($plain_text) {
+            // A plain-text recipient still has to be able to pay; earlier this
+            // returned early and sent them an email with no bank details.
+            $this->display_bank_transfer_instructions_plain($bankDetails, $order);
+
+            return;
+        }
+
+        $this->display_bank_transfer_instructions($bankDetails, $order, true);
+    }
+
+    /**
+     * Plain-text rendering of the bank details for text-only emails.
+     *
+     * @param  array<string, mixed>  $bankDetails
+     */
+    private function display_bank_transfer_instructions_plain(array $bankDetails, WC_Order $order): void
+    {
+        if (! isset($bankDetails['financial_addresses']) || ! is_array($bankDetails['financial_addresses'])) {
+            return;
+        }
+
+        echo "\n".esc_html__('Bank Transfer Instructions', 'bank-transfer-payments-for-woocommerce')."\n";
+        echo esc_html__('Please transfer the funds to the following bank account:', 'bank-transfer-payments-for-woocommerce')."\n\n";
+
+        foreach ($bankDetails['financial_addresses'] as $address) {
+            $rows = self::financialAddressRows($address);
+
+            if ($rows === []) {
+                continue;
+            }
+
+            echo esc_html(self::financialAddressLabel((string) ($address['type'] ?? '')))."\n";
+
+            foreach ($rows as $label => $value) {
+                echo esc_html($label.' '.$value)."\n";
+            }
+
+            echo "\n";
+        }
+
+        echo esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce')."\n";
     }
 
     private function get_order_total_in_cents(WC_Order $order): int

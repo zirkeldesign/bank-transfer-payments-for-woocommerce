@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZirkelDesign\BankTransfersForWooCommerce;
 
 use ZirkelDesign\BankTransfersForWooCommerce\Admin\CustomerBalanceDisplay;
+use ZirkelDesign\BankTransfersForWooCommerce\Email\AwaitingTransferEmail;
 use ZirkelDesign\BankTransfersForWooCommerce\Gateway\BankTransferGateway;
 use ZirkelDesign\BankTransfersForWooCommerce\Gateway\BlocksSupport;
 use ZirkelDesign\BankTransfersForWooCommerce\Webhook\WebhookHandler;
@@ -48,6 +49,33 @@ final class Plugin
         });
 
         (new CustomerBalanceDisplay)->register();
+
+        // WooCommerce ships no transactional email for a custom order status,
+        // so the customer would otherwise never be sent the bank details.
+        add_filter('woocommerce_email_classes', static function (array $emails): array {
+            $emails['btpw_awaiting_transfer'] = new AwaitingTransferEmail;
+
+            return $emails;
+        });
+
+        // WooCommerce loads its mailer lazily, and only for its own order
+        // statuses. Our email registers its trigger in its constructor, so
+        // without forcing the mailer here it is never even built and nothing is
+        // ever sent. Priority 5 runs before the email's own trigger at 10, so
+        // the callback registered during this pass still fires for this event.
+        add_action('woocommerce_order_status_awaiting-transfer', static function (): void {
+            if (! function_exists('WC')) {
+                return;
+            }
+
+            WC()->mailer();
+
+            // The gateway attaches the bank details to the email from its own
+            // constructor, so it has to exist too — otherwise the mail goes out
+            // correctly addressed and completely useless, with no account to
+            // pay into.
+            WC()->payment_gateways();
+        }, 5);
 
         self::registerOrderStatus();
     }
