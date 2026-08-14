@@ -69,6 +69,24 @@ final class Plugin
             ]);
         });
 
+        // WooCommerce's payment_complete() only acts on a fixed list of
+        // statuses (on-hold, pending, failed, cancelled). A custom status is
+        // not in it, so without this the webhook would verify, route and log
+        // correctly — and still silently leave every paid order unpaid.
+        add_filter('woocommerce_valid_order_statuses_for_payment_complete', static function (array $statuses): array {
+            $statuses[] = 'awaiting-transfer';
+
+            return array_values(array_unique($statuses));
+        });
+
+        // Allows the customer to complete payment from their account page while
+        // the transfer is still outstanding.
+        add_filter('woocommerce_valid_order_statuses_for_payment', static function (array $statuses): array {
+            $statuses[] = 'awaiting-transfer';
+
+            return array_values(array_unique($statuses));
+        });
+
         add_filter('wc_order_statuses', static function (array $statuses): array {
             $reordered = [];
 
