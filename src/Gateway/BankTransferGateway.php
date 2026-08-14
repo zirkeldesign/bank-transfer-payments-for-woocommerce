@@ -736,7 +736,11 @@ final class BankTransferGateway extends WC_Payment_Gateway
             echo '<h3>'.esc_html(self::financialAddressLabel($type)).'</h3>';
 
             foreach ($rows as $label => $value) {
-                echo '<p><strong>'.esc_html($label).'</strong> '.esc_html($value).'</p>';
+                // The value is monospaced so the customer can transcribe an
+                // IBAN into their banking app without misreading characters,
+                // which is the most error-prone step of paying this way.
+                echo '<p class="btpw-detail"><span class="btpw-detail__label">'.esc_html($label).'</span> '
+                    .'<span class="btpw-detail__value">'.esc_html($value).'</span></p>';
             }
 
             echo '</div>';

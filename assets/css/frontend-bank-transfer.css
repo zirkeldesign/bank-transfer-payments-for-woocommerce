@@ -1,44 +1,91 @@
+/*
+ * Customer-facing bank transfer instructions.
+ *
+ * This renders inside the shop's own theme, so it inherits colour and type
+ * rather than imposing any: borders use currentColor at low opacity, and no
+ * brand colour, gradient or animation is introduced. The one deliberate
+ * exception is the warning line, which needs to read as a warning.
+ */
+
 .btpw-bank-transfer-details {
-    margin: 1.5em 0;
+	margin: 1.5em 0;
 }
 
-.btpw-bank-details-box {
-    background: #f8f8f8;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 5px;
+.btpw-bank-details-box,
+.btpw-payment-details {
+	margin: 1em 0;
+	padding: 1em 1.25em;
+	/* Fallback first: color-mix() is unsupported in older browsers, and a
+	   missing border here would leave the details visually unseparated. */
+	border: 1px solid #dcdcde;
+	border-color: color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: 4px;
 }
 
 .btpw-bank-details-box h3 {
-    margin-top: 0;
+	margin-top: 0;
+	font-size: 1.05em;
 }
 
-.btpw-payment-details {
-    background: #e7f7ff;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 5px;
+.btpw-detail {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25em 0.75em;
+	margin: 0.35em 0;
+}
+
+.btpw-detail__label {
+	min-width: 11em;
+	opacity: 0.75;
+}
+
+/*
+ * Monospace with generous spacing: these are transcribed by hand into a
+ * banking app, where a misread character means the payment does not arrive.
+ */
+.btpw-detail__value {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	overflow-wrap: anywhere;
 }
 
 .btpw-important-notice {
-    color: #d63638;
-    font-weight: 600;
+	font-weight: 600;
+	color: #b32d2e;
 }
 
+/* GiroCode */
 .btpw-girocode {
-    margin: 20px 0;
-    max-width: 220px;
+	max-width: 220px;
+	margin: 1.25em 0 0.5em;
 }
 
 .btpw-girocode svg {
-    width: 100%;
-    height: auto;
-    display: block;
+	display: block;
+	width: 100%;
+	height: auto;
 }
 
 .btpw-girocode__hint {
-    display: block;
-    margin-top: 8px;
-    font-size: 0.85em;
-    color: #555;
+	display: block;
+	margin-bottom: 1.25em;
+	font-size: 0.875em;
+	opacity: 0.75;
+}
+
+/*
+ * Customers routinely print this page or save it as a PDF to take to their
+ * bank, so make sure the details survive without the surrounding chrome.
+ */
+@media print {
+	.btpw-bank-details-box,
+	.btpw-payment-details {
+		border-color: #767676;
+		break-inside: avoid;
+	}
+
+	.btpw-girocode {
+		break-inside: avoid;
+	}
 }
