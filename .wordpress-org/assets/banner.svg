@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250">
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="772" y2="250">
+      <stop offset="0%" stop-color="#0e3a63"/>
+      <stop offset="100%" stop-color="#0aa2dd"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="772" height="250" fill="url(#g)"/>
+
+  <!--
+    Faint motif: the actual lifecycle of one order, in the store owner's own
+    vocabulary. DE89 3704 0044 0532 0130 00 is the standard documentation IBAN,
+    not a real account.
+  -->
+  <g font-family="'Monaco', 'Courier New', monospace" font-size="13" fill="white" opacity="0.18">
+    <text x="30" y="77">order #1042</text>
+    <text x="30" y="109">own virtual IBAN</text>
+    <text x="30" y="141">payment_intent.succeeded</text>
+    <text x="30" y="173">✓ reconciled</text>
+  </g>
+
+  <!-- Centre badge: same bank facade as the icon, scaled to the banner -->
+  <circle cx="320" cy="125" r="66" fill="white" opacity="0.12"/>
+  <g fill="white" transform="translate(320 125) scale(0.62) translate(-112 -110)">
+    <path d="M 112 56 L 168 88 L 56 88 Z"/>
+    <rect x="56" y="90" width="112" height="10" rx="2"/>
+    <rect x="60" y="102" width="13" height="48"/>
+    <rect x="90" y="102" width="13" height="48"/>
+    <rect x="121" y="102" width="13" height="48"/>
+    <rect x="151" y="102" width="13" height="48"/>
+    <rect x="50" y="152" width="124" height="12" rx="3"/>
+  </g>
+
+  <!-- Title -->
+  <text x="400" y="118" font-family="'Helvetica Neue', Arial, sans-serif" font-size="38" font-weight="bold" fill="white">Bank Transfer</text>
+  <text x="402" y="152" font-family="'Helvetica Neue', Arial, sans-serif" font-size="22" fill="white" opacity="0.9">Payments for WooCommerce</text>
+</svg>

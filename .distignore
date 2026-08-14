@@ -1,6 +1,7 @@
 # Hidden dev files
 .git
 .github
+.wordpress-org
 .claude
 .idea
 .vscode
