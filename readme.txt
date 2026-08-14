@@ -54,6 +54,18 @@ Yes, for automatic reconciliation. A signing secret must be configured — the p
 = Can I really take live payments with the free version? =
 Yes. The free version is not limited to Stripe test mode. Stripe's own transaction fees apply, as with any payment method.
 
+= It works in test mode but not live. Why? =
+Bank transfers must be enabled on your Stripe account for live payments, which is a separate thing from anything in this plugin. In the Stripe Dashboard go to Settings → Payment methods and enable **Bank transfers** (Banküberweisungen). Availability also depends on your account's country and currency, and some accounts need Stripe to approve it first. Until that is done, Stripe rejects the payment with a capability error.
+
+= How long does payment take to arrive? =
+Stripe confirms bank transfers within roughly 0–3 business days, depending on the customer's bank. The order stays in "Awaiting Bank Transfer" until the money lands, then the webhook marks it paid automatically.
+
+= Is there a minimum order amount? =
+Yes. Stripe requires at least 0.50 EUR (or the equivalent) for a bank transfer. Below that the payment method is hidden at checkout, since it could not be completed. You can change the threshold with the `btpw_minimum_amount` filter.
+
+= Are chargebacks possible? =
+Bank transfers do not support disputes in the way cards do, which is part of their appeal for merchants. Refunds are supported, including partial refunds, from the WooCommerce order screen.
+
 = What if a customer transfers too little? =
 Stripe holds the part-payment in the customer balance and waits for the rest. The plugin records the shortfall as an order note so you can follow up.
 

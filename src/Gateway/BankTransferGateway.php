@@ -295,6 +295,43 @@ final class BankTransferGateway extends WC_Payment_Gateway
         ];
     }
 
+    /**
+     * The smallest amount Stripe will accept for a bank transfer.
+     *
+     * Stripe's floor is 0.50 EUR (or equivalent). Offering the method below
+     * that would let the customer reach the end of checkout only to be refused
+     * by the API, so it is hidden instead.
+     */
+    public function minimum_amount(): float
+    {
+        /**
+         * Filter the minimum order total for bank transfer.
+         *
+         * @param  float  $minimum  In the store's currency.
+         * @param  self  $gateway
+         */
+        return (float) apply_filters('btpw_minimum_amount', 0.50, $this);
+    }
+
+    /**
+     * Hide the gateway when the cart total is below Stripe's minimum.
+     */
+    public function is_available(): bool
+    {
+        if (! parent::is_available()) {
+            return false;
+        }
+
+        if (! function_exists('WC') || WC()->cart === null) {
+            return true; // Admin or REST context: nothing to measure.
+        }
+
+        $total = (float) WC()->cart->get_total('edit');
+
+        // A zero total means the cart is not yet calculated, not that it is free.
+        return $total <= 0 || $total >= $this->minimum_amount();
+    }
+
     public function payment_fields(): void
     {
         if ($this->description) {

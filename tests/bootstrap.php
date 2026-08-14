@@ -351,6 +351,12 @@ if (! class_exists('WC_Payment_Gateway')) {
             return in_array($feature, $this->supports, true);
         }
 
+        public function is_available(): bool
+        {
+            // Matches WooCommerce: a disabled gateway is never available.
+            return $this->enabled === 'yes';
+        }
+
         public function get_return_url(mixed $order = null): string
         {
             return 'https://example.test/checkout/order-received/';

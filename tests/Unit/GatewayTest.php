@@ -129,3 +129,22 @@ describe('Stripe customer_balance payload requirements', function (): void {
             ->and(BankTransferGateway::normaliseTransferType('eu_bank_transfer'))->toBe('eu_bank_transfer');
     });
 });
+
+describe('Stripe minimum amount', function (): void {
+    it('defaults to the 0.50 floor Stripe enforces', function (): void {
+        expect((new BankTransferGateway)->minimum_amount())->toBe(0.50);
+    });
+
+    it('is available outside a cart context when enabled', function (): void {
+        // Admin and REST have no cart; the gateway must not hide itself there.
+        btpw_test_set_gateway_setting('enabled', 'yes');
+
+        expect((new BankTransferGateway)->is_available())->toBeTrue();
+    });
+
+    it('stays unavailable while disabled', function (): void {
+        btpw_test_set_gateway_setting('enabled', 'no');
+
+        expect((new BankTransferGateway)->is_available())->toBeFalse();
+    });
+});
