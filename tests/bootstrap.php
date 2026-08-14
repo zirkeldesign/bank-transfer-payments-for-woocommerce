@@ -79,7 +79,22 @@ function btpw_fake_stripe_client(string $intentId = 'pi_test', string $status = 
         }
     };
 
-    return (object) ['paymentIntents' => $paymentIntents, 'refunds' => $refunds];
+    $customers = new class
+    {
+        /** @param array<string, mixed> $data */
+        public function create(array $data): object
+        {
+            $GLOBALS['btpw_test_last_customer'] = $data;
+
+            return (object) ['id' => 'cus_test'];
+        }
+    };
+
+    return (object) [
+        'paymentIntents' => $paymentIntents,
+        'refunds' => $refunds,
+        'customers' => $customers,
+    ];
 }
 
 /*
@@ -412,6 +427,11 @@ if (! class_exists('WC_Order')) {
         public function get_payment_method(): string
         {
             return $this->paymentMethod;
+        }
+
+        public function get_customer_id(): int
+        {
+            return 0; // Guest order unless a test says otherwise.
         }
 
         public function get_meta(string $key): mixed

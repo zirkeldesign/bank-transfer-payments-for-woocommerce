@@ -30,13 +30,31 @@ final class BankTransferGateway extends WC_Payment_Gateway
 {
     public const GATEWAY_ID = 'stripe_bank_transfer';
 
+    /**
+     * Legacy setting values that were never valid Stripe bank-transfer types.
+     *
+     * Early versions stored "<cc>_bank_account" and sent it as both
+     * `funding_type` and `bank_transfer.type`. Stripe expects the literal
+     * `bank_transfer` for the former and `<cc>_bank_transfer` for the latter,
+     * so stored settings are translated on read.
+     *
+     * @var array<string, string>
+     */
+    private const LEGACY_TRANSFER_TYPES = [
+        'eu_bank_account' => 'eu_bank_transfer',
+        'gb_bank_account' => 'gb_bank_transfer',
+        'us_bank_account' => 'us_bank_transfer',
+        'jp_bank_account' => 'jp_bank_transfer',
+        'mx_bank_account' => 'mx_bank_transfer',
+    ];
+
     public bool $testmode = false;
 
     public string $test_secret_key = '';
 
     public string $live_secret_key = '';
 
-    public string $transfer_type = 'eu_bank_account';
+    public string $transfer_type = 'eu_bank_transfer';
 
     public string $default_currency = 'eur';
 
@@ -73,7 +91,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $this->testmode = $this->get_option('testmode') === 'yes';
         $this->test_secret_key = (string) $this->get_option('test_secret_key');
         $this->live_secret_key = (string) $this->get_option('live_secret_key');
-        $this->transfer_type = (string) $this->get_option('transfer_type', 'eu_bank_account');
+        $this->transfer_type = self::normaliseTransferType((string) $this->get_option('transfer_type', 'eu_bank_transfer'));
         $this->default_currency = (string) $this->get_option('default_currency', 'eur');
         $this->debug_mode = $this->get_option('debug_mode') === 'yes';
         $this->enable_subscriptions = $this->get_option('enable_subscriptions') === 'yes';
@@ -222,14 +240,14 @@ final class BankTransferGateway extends WC_Payment_Gateway
                 'title' => __('Bank Transfer Type', 'bank-transfer-payments-for-woocommerce'),
                 'type' => 'select',
                 'description' => __('Select the type of bank transfer to accept.', 'bank-transfer-payments-for-woocommerce'),
-                'default' => 'eu_bank_account',
+                'default' => 'eu_bank_transfer',
                 'desc_tip' => true,
                 'options' => [
-                    'eu_bank_account' => __('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce'),
-                    'gb_bank_account' => __('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce'),
-                    'us_bank_account' => __('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce'),
-                    'jp_bank_account' => __('Japanese Bank Account', 'bank-transfer-payments-for-woocommerce'),
-                    'mx_bank_account' => __('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce'),
+                    'eu_bank_transfer' => __('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce'),
+                    'gb_bank_transfer' => __('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce'),
+                    'us_bank_transfer' => __('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce'),
+                    'jp_bank_transfer' => __('Japanese Bank Account', 'bank-transfer-payments-for-woocommerce'),
+                    'mx_bank_transfer' => __('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce'),
                 ],
             ],
             'default_currency' => [
@@ -295,7 +313,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
      *
      * @return array<string, mixed>
      */
-    public function build_payment_intent_data(WC_Order $order): array
+    public function build_payment_intent_data(WC_Order $order, string $customerId = ''): array
     {
         $orderId = $order->get_id();
 
@@ -312,6 +330,15 @@ final class BankTransferGateway extends WC_Payment_Gateway
             'customer_name' => trim($order->get_billing_first_name().' '.$order->get_billing_last_name()),
         ], $order, $this);
 
+        // Stripe requires the literal `bank_transfer` funding type; the country
+        // scheme goes on bank_transfer.type. EU additionally needs the country
+        // that determines which localised IBAN the customer is shown.
+        $bankTransfer = ['type' => $this->transfer_type];
+
+        if ($this->transfer_type === 'eu_bank_transfer') {
+            $bankTransfer['eu_bank_transfer'] = ['country' => $this->euBankTransferCountry($order)];
+        }
+
         $data = [
             'amount' => $this->get_order_total_in_cents($order),
             'currency' => strtolower($order->get_currency()),
@@ -321,16 +348,24 @@ final class BankTransferGateway extends WC_Payment_Gateway
             ],
             'payment_method_options' => [
                 'customer_balance' => [
-                    'funding_type' => $this->transfer_type,
-                    'bank_transfer' => [
-                        'type' => $this->transfer_type,
-                    ],
+                    'funding_type' => 'bank_transfer',
+                    'bank_transfer' => $bankTransfer,
                 ],
             ],
+            // Bank transfers are only assigned a virtual account once the
+            // intent is confirmed; without this there is no next_action and
+            // therefore no bank details to show the customer.
+            'confirm' => true,
             'metadata' => $metadata,
             /* translators: 1: Order number, 2: Site name */
             'description' => sprintf(__('Order %1$s from %2$s', 'bank-transfer-payments-for-woocommerce'), $order->get_order_number(), get_bloginfo('name')),
         ];
+
+        // A cash balance belongs to a Stripe customer, so customer_balance
+        // payments cannot be created without one.
+        if ($customerId !== '') {
+            $data['customer'] = $customerId;
+        }
 
         /**
          * Filter the full PaymentIntent payload before it is sent to Stripe.
@@ -340,6 +375,95 @@ final class BankTransferGateway extends WC_Payment_Gateway
          * @param  self  $gateway
          */
         return apply_filters('btpw_payment_intent_data', $data, $order, $this);
+    }
+
+    /**
+     * Translate a stored setting value into the Stripe bank-transfer type.
+     */
+    public static function normaliseTransferType(string $stored): string
+    {
+        return self::LEGACY_TRANSFER_TYPES[$stored] ?? $stored;
+    }
+
+    /**
+     * The country whose localised IBAN the customer should be shown.
+     *
+     * Stripe requires this for eu_bank_transfer. Prefer the store's own
+     * country; fall back to Germany, the primary market for this plugin.
+     * Stripe cannot currently issue localised Spanish accounts, so ES falls
+     * back too.
+     */
+    private function euBankTransferCountry(WC_Order $order): string
+    {
+        $country = '';
+
+        if (function_exists('wc_get_base_location')) {
+            $country = (string) (wc_get_base_location()['country'] ?? '');
+        }
+
+        $supported = ['DE', 'FR', 'IE', 'NL', 'BE'];
+
+        if (! in_array($country, $supported, true)) {
+            $country = 'DE';
+        }
+
+        /**
+         * Filter the country used for the customer's localised EU IBAN.
+         *
+         * @param  string  $country  Two-letter country code.
+         * @param  WC_Order  $order
+         */
+        return (string) apply_filters('btpw_eu_bank_transfer_country', $country, $order);
+    }
+
+    /**
+     * Find or create the Stripe customer this order's cash balance belongs to.
+     *
+     * Reuses an id already stored by another Stripe plugin (via the adapter
+     * registry) or by a previous order, so we do not litter the Stripe account
+     * with duplicates.
+     *
+     * @throws RuntimeException When no customer can be resolved.
+     */
+    public function resolve_stripe_customer(WC_Order $order): string
+    {
+        $stored = (string) $order->get_meta('_stripe_customer_id');
+
+        if ($stored !== '') {
+            return $stored;
+        }
+
+        $userId = (int) $order->get_customer_id();
+
+        if ($userId > 0) {
+            $existing = PluginIntegration::getStripeCustomerId($userId, $this->testmode);
+
+            if ($existing !== false && $existing !== '') {
+                $order->update_meta_data('_stripe_customer_id', $existing);
+
+                return $existing;
+            }
+        }
+
+        if ($this->stripe === null) {
+            throw new RuntimeException('Stripe client is not configured.');
+        }
+
+        /** @var StripeClient $stripe */
+        $stripe = $this->stripe;
+        $customer = $stripe->customers->create([
+            'email' => $order->get_billing_email(),
+            'name' => trim($order->get_billing_first_name().' '.$order->get_billing_last_name()),
+            'metadata' => ['order_id' => (string) $order->get_id()],
+        ]);
+
+        $order->update_meta_data('_stripe_customer_id', $customer->id);
+
+        if ($userId > 0) {
+            update_user_meta($userId, '_stripe_customer_id', $customer->id);
+        }
+
+        return (string) $customer->id;
     }
 
     /**
@@ -361,7 +485,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
         }
 
         $orderId = $order->get_id();
-        $paymentIntentData = $this->build_payment_intent_data($order);
+        $paymentIntentData = $this->build_payment_intent_data($order, $this->resolve_stripe_customer($order));
 
         $this->log('Creating PaymentIntent for order #'.$orderId);
 
