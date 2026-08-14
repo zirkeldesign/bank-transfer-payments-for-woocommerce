@@ -1,0 +1,72 @@
+.btpw-customer-balance-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.btpw-customer-balance-section table.widefat {
+    margin-top: 15px;
+}
+
+.btpw-balance {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btpw-balance-positive {
+    background: #fef5e7;
+    color: #d68910;
+}
+
+.btpw-balance-negative {
+    background: #eafaf1;
+    color: #239b56;
+}
+
+.btpw-balance-zero {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.btpw-addresses-intro {
+    margin-bottom: 15px;
+}
+
+.btpw-address-box {
+    background: #f0f0f1;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.btpw-address-box h4 {
+    margin-top: 0;
+}
+
+.btpw-address-table {
+    background: #fff;
+}
+
+.btpw-address-table th {
+    width: 200px;
+}
+
+.btpw-address-table code {
+    font-size: 14px;
+}
+
+.btpw-create-account {
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.btpw-create-account .spinner {
+    float: none;
+    margin: 0 0 0 10px;
+}

@@ -42,3 +42,8 @@ yarn.lock
 *.bak
 *.swp
 *~
+
+# Build artefacts
+/build/
+/vendor-prefixed/
+/bin/strauss.phar

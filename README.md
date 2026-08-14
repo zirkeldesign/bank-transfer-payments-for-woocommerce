@@ -1,241 +1,63 @@
-# WooCommerce Stripe Bank Transfers
+# Bank Transfer Payments for WooCommerce
 
-A WordPress/WooCommerce payment gateway plugin that integrates Stripe bank transfer payments. Customers receive unique bank account details for each order.
+Accept **reconciled** bank transfer payments in WooCommerce via Stripe. Each order
+receives its own unique virtual bank account (SEPA IBAN, UK Bacs, US ACH, Mexican
+SPEI, Japanese Zengin) through Stripe's `customer_balance` funding flow, and a
+Stripe webhook marks the order paid automatically — no manual bank-statement
+matching.
 
-## Features
-
-- ✅ Supports multiple bank transfer types (ACH, SEPA, Bacs, SPEI, Japanese bank accounts)
-- ✅ Unique bank account details generated for each order
-- ✅ **Integrates with existing Stripe plugins** - automatically detects and reuses credentials
-- ✅ **Customer balance display** in WordPress admin user profiles
-- ✅ Automatic payment confirmation via Stripe webhooks
-- ✅ Custom order status: "Awaiting Bank Transfer"
-- ✅ Bank transfer details displayed on thank you page and in emails
-- ✅ Test mode support
-- ✅ Debug logging
-- ✅ Fully translatable
+Built DACH-first: SEPA / EUR is the default.
 
 ## Requirements
 
-- WordPress 5.8 or higher
-- WooCommerce 5.0 or higher
-- PHP 7.4 or higher
-- Stripe account with bank transfer payment methods enabled
+- PHP 8.3+
+- WordPress 6.5+
+- WooCommerce 9.0+
+- A Stripe account with bank-transfer (customer_balance) enabled for your country/currency
 
-## Installation
+## How it works
 
-### From Source
+1. Customer selects **Bank Transfer** at checkout.
+2. The plugin creates a Stripe PaymentIntent (`customer_balance`) and stores the
+   returned virtual bank account details on the order.
+3. The order is set to **Awaiting Bank Transfer**; instructions are shown on the
+   thank-you page and emailed to the customer.
+4. When the transfer lands, Stripe fires `payment_intent.succeeded`; the signed
+   webhook marks the order paid.
 
-1. Clone this repository into your WordPress plugins directory:
-   ```bash
-   cd /path/to/wordpress/wp-content/plugins/
-   git clone https://github.com/yourusername/woocommerce-stripe-bank-transfers.git
-   ```
+## Stripe credential reuse
 
-2. Install dependencies:
-   ```bash
-   cd woocommerce-stripe-bank-transfers
-   composer install --no-dev
-   ```
+If the official WooCommerce Stripe Gateway, Payment Plugins for Stripe
+WooCommerce, or WP Swings' Payment Gateway Stripe and WooCommerce Integration is
+already configured, this plugin can reuse its API keys. Add support for another
+plugin with the `btpw_stripe_plugin_adapters` filter:
 
-3. Activate the plugin through the WordPress admin panel
+```php
+add_filter('btpw_stripe_plugin_adapters', function (array $adapters): array {
+    $adapters[] = new My_Stripe_Adapter(); // implements StripePluginAdapter
+    return $adapters;
+});
+```
 
-### For Development
-
-1. Clone and install dependencies:
-   ```bash
-   git clone https://github.com/yourusername/woocommerce-stripe-bank-transfers.git
-   cd woocommerce-stripe-bank-transfers
-   composer install
-   ```
-
-2. Symlink to your WordPress installation:
-   ```bash
-   ln -s $(pwd) /path/to/wordpress/wp-content/plugins/woocommerce-stripe-bank-transfers
-   ```
-
-## Configuration
-
-### Existing Stripe Plugin Integration
-
-If you already have one of these Stripe plugins installed and configured, this plugin will automatically detect and use their Stripe credentials:
-
-- **Payment Plugins for Stripe WooCommerce** (`woo-stripe-payment`)
-- **WooCommerce Stripe Gateway** (`woocommerce-gateway-stripe`)
-
-You'll see a notice on the settings page indicating which plugin's credentials are being used. You can still override by configuring your own API keys.
-
-### Manual Configuration
-
-1. Navigate to **WooCommerce → Settings → Payments**
-2. Enable **Stripe Bank Transfer**
-3. Click **Manage** to configure:
-   - **Test Mode**: Enable for testing with Stripe test API keys
-   - **Test/Live Secret Keys**: Add your Stripe API keys
-   - **Bank Transfer Type**: Select the type of bank transfer (ACH, SEPA, etc.)
-   - **Debug Mode**: Enable logging for troubleshooting
-
-4. Set up webhooks in Stripe:
-   - Go to Stripe Dashboard → Developers → Webhooks
-   - Add endpoint: `https://yoursite.com/wp-json/wc-stripe-bank-transfers/v1/webhook`
-   - Select these events:
-     - `payment_intent.succeeded`
-     - `payment_intent.payment_failed`
-     - `payment_intent.canceled`
-     - `payment_intent.processing`
-     - `payment_intent.requires_action`
-   - Copy the webhook signing secret
-   - Add it to the plugin settings (webhook_secret field - needs to be added to gateway settings)
-
-## How It Works
-
-1. **Customer Checkout**: Customer selects "Bank Transfer" as payment method
-2. **Order Placement**: Order is created with "Awaiting Bank Transfer" status
-3. **Bank Details**: Stripe generates unique bank account details for the order
-4. **Payment Instructions**: Customer receives bank transfer instructions on:
-   - Order thank you page
-   - Order confirmation email
-5. **Payment Confirmation**: When customer transfers funds:
-   - Stripe webhook notifies the plugin
-   - Order status automatically updates to "Processing"
-   - Customer receives order confirmation
-
-## Customer Balance Display
-
-Administrators and shop managers can view Stripe customer balances directly in WordPress:
-
-1. Go to **Users → All Users** and click on any user
-2. Scroll down to the **Stripe Customer Balance** section
-3. View:
-   - Stripe Customer ID
-   - Current balance
-   - Available cash balance
-   - Recent balance transactions
-   - Direct link to Stripe Dashboard
-
-This feature works with any customer who has a Stripe customer ID, including those created by other Stripe plugins.
-
-## Bank Transfer Types Supported
-
-- **US Bank Account (ACH)**: US domestic bank transfers
-- **EU Bank Account (SEPA)**: European bank transfers
-- **UK Bank Account (Bacs)**: UK bank transfers
-- **Mexican Bank Account (SPEI)**: Mexican bank transfers
-- **Japanese Bank Account**: Japanese bank transfers
+Your gateway's **Test mode** is independent of the host plugin's mode — a test-mode
+lookup always returns the host's *test* keys, even while it serves live traffic.
 
 ## Development
 
-### Testing Webhooks Locally
-
-Use Stripe CLI to forward webhooks to your local environment:
-
 ```bash
-stripe listen --forward-to http://localhost:8888/wp-json/wc-stripe-bank-transfers/v1/webhook
+composer install
+composer test          # Pest 4 unit + feature suite
+composer phpstan       # PHPStan level 6
+composer format        # Pint (Laravel preset)
+composer test:browser  # opt-in Pest browser e2e (needs a live store + BTPW_E2E_URL)
+composer dist          # build the scoped, distributable zip
+composer pcp           # run WordPress.org Plugin Check on the built zip
 ```
 
-### Code Standards
-
-This plugin follows WordPress Coding Standards and uses Laravel Pint for formatting:
-
-```bash
-# Check code style
-composer lint
-
-# Auto-fix issues
-composer format
-
-# Run tests
-composer test
-
-# Run tests with coverage
-composer test:coverage
-
-# JavaScript/TypeScript
-bun run lint
-bun run format
-```
-
-### Directory Structure
-
-```
-woocommerce-stripe-bank-transfers/
-├── includes/
-│   ├── class-wc-gateway-stripe-bank-transfer.php  # Payment gateway class
-│   ├── class-stripe-webhook-handler.php            # Webhook handler
-│   ├── class-stripe-integration.php                # Existing plugin integration
-│   └── class-customer-balance-display.php          # Admin balance display
-├── tests/
-│   ├── Unit/                                       # Unit tests (PEST)
-│   ├── Feature/                                    # Feature tests (PEST)
-│   └── Pest.php                                    # PEST configuration
-├── languages/                                       # Translation files
-├── woocommerce-stripe-bank-transfers.php           # Main plugin file
-├── composer.json                                    # PHP dependencies
-├── package.json                                     # JavaScript dependencies (Bun)
-├── pint.json                                        # Laravel Pint config
-├── phpunit.xml                                      # PHPUnit config
-└── README.md
-```
-
-## API Reference
-
-### Webhook Endpoint
-
-```
-POST /wp-json/wc-stripe-bank-transfers/v1/webhook
-```
-
-Handles Stripe webhook events for payment status updates.
-
-### Order Meta Keys
-
-- `_stripe_payment_intent_id`: Stripe PaymentIntent ID
-- `_stripe_payment_intent_status`: Current PaymentIntent status
-- `_stripe_bank_transfer_details`: JSON-encoded bank account details
-
-## Troubleshooting
-
-### Enable Debug Logging
-
-1. Go to plugin settings
-2. Enable "Debug Mode"
-3. View logs at **WooCommerce → Status → Logs**
-4. Look for files starting with `stripe-bank-transfer`
-
-### Common Issues
-
-**Bank transfer details not showing**
-- Check that the PaymentIntent was created successfully
-- Verify the Stripe API version (should be 2023-10-16 or later)
-- Enable debug logging and check for errors
-
-**Webhooks not working**
-- Verify webhook URL is accessible from the internet
-- Check webhook signing secret is configured correctly
-- Use Stripe CLI to test webhook delivery locally
-
-**Payment not confirmed**
-- Check webhook events are configured in Stripe Dashboard
-- Verify webhook endpoint is receiving events (check logs)
-- Ensure order has the correct PaymentIntent ID in meta data
-
-## Security
-
-- Never commit your Stripe API keys to version control
-- Use environment variables or wp-config.php constants for sensitive data
-- Always verify webhook signatures in production
-- Keep the Stripe PHP library updated
-
-## Support
-
-For issues and questions:
-- Create an issue on GitHub
-- Check Stripe documentation: https://docs.stripe.com/payments/bank-transfers
+`composer dist` bundles the Stripe SDK **namespace-scoped** (via Strauss) into
+`ZirkelDesign\BankTransfersForWooCommerce\Vendor\Stripe\…` so it never collides
+with another Stripe plugin's bundled copy.
 
 ## License
 
-GPL-3.0-or-later
-
-## Credits
-
-Built with [Stripe PHP SDK](https://github.com/stripe/stripe-php)
+GPL-2.0-or-later.

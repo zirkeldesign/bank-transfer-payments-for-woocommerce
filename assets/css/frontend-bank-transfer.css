@@ -1,0 +1,44 @@
+.btpw-bank-transfer-details {
+    margin: 1.5em 0;
+}
+
+.btpw-bank-details-box {
+    background: #f8f8f8;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.btpw-bank-details-box h3 {
+    margin-top: 0;
+}
+
+.btpw-payment-details {
+    background: #e7f7ff;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.btpw-important-notice {
+    color: #d63638;
+    font-weight: 600;
+}
+
+.btpw-girocode {
+    margin: 20px 0;
+    max-width: 220px;
+}
+
+.btpw-girocode svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.btpw-girocode__hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: #555;
+}

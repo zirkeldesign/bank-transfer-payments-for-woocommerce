@@ -1,0 +1,44 @@
+# Hidden dev files
+.git
+.github
+.claude
+.idea
+.vscode
+.gitignore
+.distignore
+.editorconfig
+.phpactor.json
+.version
+
+# Dev tooling
+phpstan.neon
+pint.json
+phpunit.xml
+composer.lock
+package.json
+bun.lock
+bun.lockb
+node_modules
+
+# Source-only / build inputs
+bin
+scripts
+tests
+.phpunit.cache
+get-version.php
+
+# Distribution artefacts
+dist
+
+# Docs not part of the install
+README.md
+CHANGELOG.md
+QUICKSTART.md
+AGENTS.md
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Business/planning docs (not part of the install)
+docs

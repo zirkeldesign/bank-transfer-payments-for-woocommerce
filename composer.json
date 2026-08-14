@@ -1,41 +1,87 @@
 {
-    "name": "zirkeldesign/woocommerce-stripe-bank-transfers",
-    "description": "WooCommerce payment gateway for Stripe bank transfers",
-    "license": "GPL-3.0-or-later",
+    "name": "zirkeldesign/bank-transfer-payments-for-woocommerce",
+    "description": "Accept reconciled bank transfer payments in WooCommerce via Stripe, with per-order virtual bank accounts and automatic webhook reconciliation.",
+    "license": "GPL-2.0-or-later",
     "type": "wordpress-plugin",
+    "keywords": [
+        "wordpress",
+        "woocommerce",
+        "stripe",
+        "bank-transfer",
+        "sepa",
+        "payments"
+    ],
     "authors": [
         {
+            "name": "zirkel.design",
+            "email": "hello@zirkel.design",
+            "homepage": "https://zirkel.design"
+        },
+        {
             "name": "Daniel Sturm",
-            "email": "d.sturm@zirkeldesign.de"
+            "email": "d.sturm@zirkeldesign.de",
+            "homepage": "https://zirkel.design"
         }
     ],
+    "homepage": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce",
+    "support": {
+        "issues": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce/issues",
+        "source": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce"
+    },
     "require": {
-        "php": ">=8.1",
-        "stripe/stripe-php": ">=12.0"
+        "php": "^8.3",
+        "stripe/stripe-php": "^19.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.0",
-        "pestphp/pest": "^4.1.6",
-        "wp-coding-standards/wpcs": "^3.0",
-        "yoast/phpunit-polyfills": "^4.0"
+        "laravel/pint": "^1.27",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-browser": "^4.0",
+        "php-stubs/woocommerce-stubs": "^9.0",
+        "php-stubs/wordpress-stubs": "^6.7",
+        "phpstan/phpstan": "^2.0",
+        "szepeviktor/phpstan-wordpress": "^2.0"
     },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "autoload": {
-        "classmap": [
-            "includes/"
-        ]
+        "psr-4": {
+            "ZirkelDesign\\BankTransfersForWooCommerce\\": "src/"
+        }
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "vendor-prefixed",
+            "namespace_prefix": "ZirkelDesign\\BankTransfersForWooCommerce\\Vendor\\",
+            "classmap_prefix": "BTPW_Vendor_",
+            "constant_prefix": "BTPW_STRIPE_",
+            "packages": [
+                "stripe/stripe-php"
+            ],
+            "delete_vendor_packages": true,
+            "update_call_sites": true
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZirkelDesign\\BankTransfersForWooCommerce\\Tests\\": "tests/"
+        }
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
             "pestphp/pest-plugin": true
-        }
+        },
+        "platform": {
+            "php": "8.3.0"
+        },
+        "sort-packages": true
     },
     "scripts": {
+        "dist": "bash scripts/build-dist.sh",
         "format": "pint",
-        "lint": "pint --test",
-        "phpcbf": "phpcbf --standard=WordPress includes/ woocommerce-stripe-bank-transfers.php",
-        "phpcs": "phpcs --standard=WordPress includes/ woocommerce-stripe-bank-transfers.php",
+        "format:test": "pint --test",
+        "phpstan": "phpstan analyse --memory-limit=1G",
         "test": "pest",
-        "test:coverage": "pest --coverage"
+        "test:browser": "pest tests/Browser",
+        "pcp": "bash bin/plugin-check.sh"
     }
 }
