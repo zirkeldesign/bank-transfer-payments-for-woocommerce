@@ -82,6 +82,8 @@
         "phpstan": "phpstan analyse --memory-limit=1G",
         "test": "pest",
         "test:browser": "pest tests/Browser",
-        "pcp": "bash bin/plugin-check.sh"
+        "pcp": "bash bin/plugin-check.sh",
+        "test:integration": "pest -c phpunit.integration.xml",
+        "test:integration:setup": "./scripts/integration-env.sh"
     }
 }
