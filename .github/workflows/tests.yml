@@ -39,8 +39,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Pest 5 requires PHP 8.4; the plugin itself still runs on 8.3+.
-        php: ['8.4']
+        # The plugin's floor is 8.3 (composer platform pin), so test it there
+        # too — an 8.4-only matrix would not catch a syntax or stdlib feature
+        # that the declared minimum cannot run.
+        php: ['8.3', '8.4']
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
