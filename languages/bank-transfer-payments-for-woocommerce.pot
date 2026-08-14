@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-14T09:44:52+00:00\n"
+"POT-Creation-Date: 2026-08-14T10:03:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bank-transfer-payments-for-woocommerce\n"
@@ -169,6 +169,7 @@ msgid "Generates unique bank account details for this customer to receive transf
 msgstr ""
 
 #: src/Admin/CustomerBalanceDisplay.php:374
+#: src/Gateway/BankTransferGateway.php:775
 msgid "Bank Account"
 msgstr ""
 
@@ -322,26 +323,27 @@ msgid "Select the type of bank transfer to accept."
 msgstr ""
 
 #: src/Gateway/BankTransferGateway.php:246
-#: src/Gateway/BankTransferGateway.php:734
+#: src/Gateway/BankTransferGateway.php:770
 msgid "EU Bank Account (SEPA)"
 msgstr ""
 
 #: src/Gateway/BankTransferGateway.php:247
-#: src/Gateway/BankTransferGateway.php:738
+#: src/Gateway/BankTransferGateway.php:772
 msgid "UK Bank Account (Bacs)"
 msgstr ""
 
 #: src/Gateway/BankTransferGateway.php:248
-#: src/Gateway/BankTransferGateway.php:729
+#: src/Gateway/BankTransferGateway.php:771
 msgid "US Bank Account (ACH)"
 msgstr ""
 
 #: src/Gateway/BankTransferGateway.php:249
+#: src/Gateway/BankTransferGateway.php:774
 msgid "Japanese Bank Account"
 msgstr ""
 
 #: src/Gateway/BankTransferGateway.php:250
-#: src/Gateway/BankTransferGateway.php:742
+#: src/Gateway/BankTransferGateway.php:773
 msgid "Mexican Bank Account (SPEI)"
 msgstr ""
 
@@ -478,48 +480,67 @@ msgstr ""
 msgid "Please transfer the funds to the following bank account:"
 msgstr ""
 
-#: src/Gateway/BankTransferGateway.php:730
-#: src/Gateway/BankTransferGateway.php:739
-msgid "Account Number:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:731
-msgid "Routing Number:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:735
-msgid "IBAN:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:736
-msgid "BIC:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:740
-msgid "Sort Code:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:743
-msgid "CLABE:"
-msgstr ""
-
-#: src/Gateway/BankTransferGateway.php:756
+#: src/Gateway/BankTransferGateway.php:752
 msgid "Amount:"
 msgstr ""
 
-#: src/Gateway/BankTransferGateway.php:757
+#: src/Gateway/BankTransferGateway.php:753
 msgid "Order Number:"
 msgstr ""
 
-#: src/Gateway/BankTransferGateway.php:760
+#: src/Gateway/BankTransferGateway.php:756
 msgid "View Full Instructions"
 msgstr ""
 
-#: src/Gateway/BankTransferGateway.php:764
+#: src/Gateway/BankTransferGateway.php:760
 msgid "Important: Please include your order number as the payment reference."
 msgstr ""
 
-#: src/Gateway/BankTransferGateway.php:796
+#: src/Gateway/BankTransferGateway.php:800
+msgid "IBAN:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:801
+msgid "BIC:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:802
+#: src/Gateway/BankTransferGateway.php:812
+msgid "Account Holder Name:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:805
+#: src/Gateway/BankTransferGateway.php:810
+#: src/Gateway/BankTransferGateway.php:819
+msgid "Account Number:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:806
+msgid "Routing Number:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:807
+#: src/Gateway/BankTransferGateway.php:816
+msgid "Bank Name:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:811
+msgid "Sort Code:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:815
+msgid "CLABE:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:820
+msgid "Bank Code:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:821
+msgid "Branch Code:"
+msgstr ""
+
+#: src/Gateway/BankTransferGateway.php:857
 msgid "Scan this GiroCode with your banking app to pre-fill the transfer."
 msgstr ""
 

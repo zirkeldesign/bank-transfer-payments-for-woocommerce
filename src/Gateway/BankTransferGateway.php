@@ -721,26 +721,22 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $sepaAddress = null;
 
         foreach ($bankDetails['financial_addresses'] as $address) {
-            $type = $address['type'] ?? '';
+            $type = (string) ($address['type'] ?? '');
+            $rows = self::financialAddressRows($address);
+
+            if ($rows === []) {
+                continue;
+            }
+
+            if ($type === 'iban' && is_array($address['iban'] ?? null)) {
+                $sepaAddress = $address['iban'];
+            }
 
             echo '<div class="btpw-bank-details-box">';
+            echo '<h3>'.esc_html(self::financialAddressLabel($type)).'</h3>';
 
-            if ($type === 'ach') {
-                echo '<h3>'.esc_html__('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce').'</h3>';
-                echo '<p><strong>'.esc_html__('Account Number:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['ach']['account_number'] ?? '').'</p>';
-                echo '<p><strong>'.esc_html__('Routing Number:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['ach']['routing_number'] ?? '').'</p>';
-            } elseif ($type === 'sepa') {
-                $sepaAddress = is_array($address['sepa'] ?? null) ? $address['sepa'] : null;
-                echo '<h3>'.esc_html__('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce').'</h3>';
-                echo '<p><strong>'.esc_html__('IBAN:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['sepa']['iban'] ?? '').'</p>';
-                echo '<p><strong>'.esc_html__('BIC:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['sepa']['bic'] ?? '').'</p>';
-            } elseif ($type === 'sort_code') {
-                echo '<h3>'.esc_html__('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce').'</h3>';
-                echo '<p><strong>'.esc_html__('Account Number:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['sort_code']['account_number'] ?? '').'</p>';
-                echo '<p><strong>'.esc_html__('Sort Code:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['sort_code']['sort_code'] ?? '').'</p>';
-            } elseif ($type === 'spei') {
-                echo '<h3>'.esc_html__('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce').'</h3>';
-                echo '<p><strong>'.esc_html__('CLABE:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($address['spei']['clabe'] ?? '').'</p>';
+            foreach ($rows as $label => $value) {
+                echo '<p><strong>'.esc_html($label).'</strong> '.esc_html($value).'</p>';
             }
 
             echo '</div>';
@@ -763,6 +759,71 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
         echo '<p class="btpw-important-notice">'.esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce').'</p>';
         echo '</section>';
+    }
+
+    /**
+     * Human label for a Stripe financial-address type.
+     */
+    public static function financialAddressLabel(string $type): string
+    {
+        return match ($type) {
+            'iban' => __('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce'),
+            'aba' => __('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce'),
+            'sort_code' => __('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce'),
+            'spei' => __('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce'),
+            'zengin' => __('Japanese Bank Account', 'bank-transfer-payments-for-woocommerce'),
+            default => __('Bank Account', 'bank-transfer-payments-for-woocommerce'),
+        };
+    }
+
+    /**
+     * The label/value pairs to show for one Stripe financial address.
+     *
+     * The keys are Stripe's own: iban, aba, sort_code, spei, zengin. Earlier
+     * versions looked for "sepa" and "ach", which Stripe never sends, so the
+     * customer saw a heading and no bank details at all.
+     *
+     * @param  array<string, mixed>  $address
+     * @return array<string, string>
+     */
+    public static function financialAddressRows(array $address): array
+    {
+        $type = (string) ($address['type'] ?? '');
+        $data = is_array($address[$type] ?? null) ? $address[$type] : [];
+
+        if ($data === []) {
+            return [];
+        }
+
+        $rows = match ($type) {
+            'iban' => [
+                __('IBAN:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['iban'] ?? ''),
+                __('BIC:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bic'] ?? ''),
+                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
+            ],
+            'aba' => [
+                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Routing Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['routing_number'] ?? ''),
+                __('Bank Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
+            ],
+            'sort_code' => [
+                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Sort Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['sort_code'] ?? ''),
+                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
+            ],
+            'spei' => [
+                __('CLABE:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['clabe'] ?? ''),
+                __('Bank Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
+            ],
+            'zengin' => [
+                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Bank Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_code'] ?? ''),
+                __('Branch Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['branch_code'] ?? ''),
+            ],
+            default => [],
+        };
+
+        return array_filter($rows, static fn (string $v): bool => $v !== '');
     }
 
     /**

@@ -153,6 +153,7 @@ msgid "Generates unique bank account details for this customer to receive transf
 msgstr "Erzeugt eindeutige Bankverbindungsdaten, über die dieser Kunde Überweisungen empfangen kann."
 
 #: src/Admin/CustomerBalanceDisplay.php:374
+#: src/Gateway/BankTransferGateway.php:775
 msgid "Bank Account"
 msgstr "Bankkonto"
 
@@ -306,26 +307,27 @@ msgid "Select the type of bank transfer to accept."
 msgstr "Wählen Sie die Art der Banküberweisung, die akzeptiert werden soll."
 
 #: src/Gateway/BankTransferGateway.php:246
-#: src/Gateway/BankTransferGateway.php:734
+#: src/Gateway/BankTransferGateway.php:770
 msgid "EU Bank Account (SEPA)"
 msgstr "EU-Bankkonto (SEPA)"
 
 #: src/Gateway/BankTransferGateway.php:247
-#: src/Gateway/BankTransferGateway.php:738
+#: src/Gateway/BankTransferGateway.php:772
 msgid "UK Bank Account (Bacs)"
 msgstr "UK-Bankkonto (Bacs)"
 
 #: src/Gateway/BankTransferGateway.php:248
-#: src/Gateway/BankTransferGateway.php:729
+#: src/Gateway/BankTransferGateway.php:771
 msgid "US Bank Account (ACH)"
 msgstr "US-Bankkonto (ACH)"
 
 #: src/Gateway/BankTransferGateway.php:249
+#: src/Gateway/BankTransferGateway.php:774
 msgid "Japanese Bank Account"
 msgstr "Japanisches Bankkonto"
 
 #: src/Gateway/BankTransferGateway.php:250
-#: src/Gateway/BankTransferGateway.php:742
+#: src/Gateway/BankTransferGateway.php:773
 msgid "Mexican Bank Account (SPEI)"
 msgstr "Mexikanisches Bankkonto (SPEI)"
 
@@ -408,44 +410,45 @@ msgstr "Anweisungen zur Banküberweisung"
 msgid "Please transfer the funds to the following bank account:"
 msgstr "Bitte überweisen Sie den Betrag auf das folgende Bankkonto:"
 
-#: src/Gateway/BankTransferGateway.php:730
-#: src/Gateway/BankTransferGateway.php:739
+#: src/Gateway/BankTransferGateway.php:805
+#: src/Gateway/BankTransferGateway.php:810
+#: src/Gateway/BankTransferGateway.php:819
 msgid "Account Number:"
 msgstr "Kontonummer:"
 
-#: src/Gateway/BankTransferGateway.php:731
+#: src/Gateway/BankTransferGateway.php:806
 msgid "Routing Number:"
 msgstr "Routing-Nummer:"
 
-#: src/Gateway/BankTransferGateway.php:735
+#: src/Gateway/BankTransferGateway.php:800
 msgid "IBAN:"
 msgstr "IBAN:"
 
-#: src/Gateway/BankTransferGateway.php:736
+#: src/Gateway/BankTransferGateway.php:801
 msgid "BIC:"
 msgstr "BIC:"
 
-#: src/Gateway/BankTransferGateway.php:740
+#: src/Gateway/BankTransferGateway.php:811
 msgid "Sort Code:"
 msgstr "Sort Code:"
 
-#: src/Gateway/BankTransferGateway.php:743
+#: src/Gateway/BankTransferGateway.php:815
 msgid "CLABE:"
 msgstr "CLABE:"
 
-#: src/Gateway/BankTransferGateway.php:756
+#: src/Gateway/BankTransferGateway.php:752
 msgid "Amount:"
 msgstr "Betrag:"
 
-#: src/Gateway/BankTransferGateway.php:757
+#: src/Gateway/BankTransferGateway.php:753
 msgid "Order Number:"
 msgstr "Bestellnummer:"
 
-#: src/Gateway/BankTransferGateway.php:760
+#: src/Gateway/BankTransferGateway.php:756
 msgid "View Full Instructions"
 msgstr "Vollständige Anweisungen ansehen"
 
-#: src/Gateway/BankTransferGateway.php:764
+#: src/Gateway/BankTransferGateway.php:760
 msgid "Important: Please include your order number as the payment reference."
 msgstr "Wichtig: Bitte geben Sie Ihre Bestellnummer als Verwendungszweck an."
 
@@ -573,7 +576,7 @@ msgstr "In Wartestellung"
 msgid "Pending payment"
 msgstr "Zahlung ausstehend"
 
-#: src/Gateway/BankTransferGateway.php:796
+#: src/Gateway/BankTransferGateway.php:857
 msgid "Scan this GiroCode with your banking app to pre-fill the transfer."
 msgstr "Scannen Sie diesen GiroCode mit Ihrer Banking-App, um die Überweisung vorauszufüllen."
 
@@ -614,3 +617,21 @@ msgstr "Pro"
 #, php-format
 msgid "Partial bank transfer received: %1$s of %2$s (minor units). Awaiting the remaining amount."
 msgstr "Teilzahlung per Banküberweisung erhalten: %1$s von %2$s (kleinste Währungseinheit). Der Restbetrag steht noch aus."
+
+#: src/Gateway/BankTransferGateway.php:802
+#: src/Gateway/BankTransferGateway.php:812
+msgid "Account Holder Name:"
+msgstr "Name des Kontoinhabers:"
+
+#: src/Gateway/BankTransferGateway.php:807
+#: src/Gateway/BankTransferGateway.php:816
+msgid "Bank Name:"
+msgstr "Name der Bank:"
+
+#: src/Gateway/BankTransferGateway.php:820
+msgid "Bank Code:"
+msgstr "Bankleitzahl:"
+
+#: src/Gateway/BankTransferGateway.php:821
+msgid "Branch Code:"
+msgstr "Filialnummer:"

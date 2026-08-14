@@ -67,14 +67,19 @@ function btpw_stripe_test_key(): string
  */
 function btpw_live_gateway(string $transferType = 'eu_bank_transfer'): \ZirkelDesign\BankTransfersForWooCommerce\Gateway\BankTransferGateway
 {
-    update_option('woocommerce_stripe_bank_transfer_settings', [
+    // Merge rather than replace: a wholesale write would silently wipe any
+    // other gateway settings the install already has, such as the title and
+    // description a developer configured by hand.
+    $existing = (array) get_option('woocommerce_stripe_bank_transfer_settings', []);
+
+    update_option('woocommerce_stripe_bank_transfer_settings', array_merge($existing, [
         'enabled' => 'yes',
         'testmode' => 'yes',
         'test_secret_key' => btpw_stripe_test_key(),
         'transfer_type' => $transferType,
         'default_currency' => 'eur',
         'debug_mode' => 'no',
-    ]);
+    ]));
 
     return new \ZirkelDesign\BankTransfersForWooCommerce\Gateway\BankTransferGateway;
 }

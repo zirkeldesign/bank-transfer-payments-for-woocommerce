@@ -148,3 +148,48 @@ describe('Stripe minimum amount', function (): void {
         expect((new BankTransferGateway)->is_available())->toBeFalse();
     });
 });
+
+describe('Stripe financial address rendering', function (): void {
+    it('reads the iban type Stripe actually sends, not "sepa"', function (): void {
+        $rows = BankTransferGateway::financialAddressRows([
+            'type' => 'iban',
+            'iban' => ['iban' => 'DE89370400440532013000', 'bic' => 'COBADEFFXXX', 'account_holder_name' => 'Shop'],
+        ]);
+
+        expect(implode(' ', $rows))->toContain('DE89370400440532013000')
+            ->and(implode(' ', $rows))->toContain('COBADEFFXXX');
+    });
+
+    it('reads the aba type Stripe actually sends, not "ach"', function (): void {
+        $rows = BankTransferGateway::financialAddressRows([
+            'type' => 'aba',
+            'aba' => ['account_number' => '000123456789', 'routing_number' => '110000000'],
+        ]);
+
+        expect(implode(' ', $rows))->toContain('000123456789')
+            ->and(implode(' ', $rows))->toContain('110000000');
+    });
+
+    it('supports sort_code, spei and zengin', function (): void {
+        expect(BankTransferGateway::financialAddressRows(['type' => 'sort_code', 'sort_code' => ['account_number' => '1', 'sort_code' => '2']]))->not->toBeEmpty()
+            ->and(BankTransferGateway::financialAddressRows(['type' => 'spei', 'spei' => ['clabe' => '3']]))->not->toBeEmpty()
+            ->and(BankTransferGateway::financialAddressRows(['type' => 'zengin', 'zengin' => ['account_number' => '4']]))->not->toBeEmpty();
+    });
+
+    it('returns nothing for an unknown or empty address', function (): void {
+        expect(BankTransferGateway::financialAddressRows(['type' => 'sepa', 'sepa' => ['iban' => 'x']]))->toBe([])
+            ->and(BankTransferGateway::financialAddressRows(['type' => 'iban']))->toBe([]);
+    });
+
+    it('omits empty values rather than printing blank rows', function (): void {
+        $rows = BankTransferGateway::financialAddressRows(['type' => 'iban', 'iban' => ['iban' => 'DE1', 'bic' => '']]);
+
+        expect($rows)->toHaveCount(1);
+    });
+
+    it('labels each Stripe address type', function (): void {
+        expect(BankTransferGateway::financialAddressLabel('iban'))->toContain('SEPA')
+            ->and(BankTransferGateway::financialAddressLabel('aba'))->toContain('ACH')
+            ->and(BankTransferGateway::financialAddressLabel('zengin'))->toContain('Japanese');
+    });
+});
