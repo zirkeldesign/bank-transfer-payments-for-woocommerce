@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   so the QR code is now dropped instead and the customer uses the details table.
 
 ### Changed
+- Updated the bundled Stripe SDK to stripe-php 21 and moved the pinned Stripe API
+  version from `2023-10-16` to `2026-08-26.dahlia` to match it. The two are coupled:
+  stripe-php 21 raises Stripe's "outdated API version" notice as an `E_USER_WARNING`
+  on every API call, so an SDK bump alone would emit a PHP warning per order on a
+  live store. A unit test now fails if the pin drifts from the SDK's target.
 - Tested up to WordPress 7.1. Dev-only toolchain updated to match: `wordpress-stubs`
   7.1, `woocommerce-stubs` 11.0, PHPStan 2.2.10. None of these ship in the plugin zip.
 - "Account Holder Name" is now the first row for SEPA (`iban`) and Bacs

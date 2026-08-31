@@ -75,14 +75,24 @@ describe('Stripe bank transfer, live test API', function (): void {
             expect($addresses)->not->toBeEmpty();
 
             $iban = null;
+            $accountHolderName = null;
             foreach ($addresses as $address) {
                 if (($address->type ?? '') === 'iban') {
                     $iban = $address->iban->iban ?? null;
+                    $accountHolderName = $address->iban->account_holder_name ?? null;
                 }
             }
 
             expect($iban)->not->toBeNull()
                 ->and($iban)->toBeString();
+
+            // Verification of Payee: the customer's bank matches this name
+            // against the IBAN. Without it the instructions cannot be paid
+            // reliably and the GiroCode is suppressed, so a Stripe API version
+            // that stopped returning it would break the plugin quietly.
+            expect($accountHolderName)->not->toBeNull()
+                ->and($accountHolderName)->toBeString()
+                ->and(trim((string) $accountHolderName))->not->toBe('');
         } finally {
             $order->delete(true);
         }

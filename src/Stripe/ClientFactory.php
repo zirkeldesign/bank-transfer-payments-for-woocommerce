@@ -23,8 +23,15 @@ final class ClientFactory
 {
     /**
      * Stripe API version this plugin is written against.
+     *
+     * Keep this in step with the bundled SDK's own target
+     * (\Stripe\Util\ApiVersion::CURRENT). Pinning behind it makes Stripe
+     * return a "stripe-notice" header, which stripe-php 21+ raises as an
+     * E_USER_WARNING on every single API call. It is pinned rather than read
+     * from the SDK so that updating the SDK cannot silently change the API
+     * behaviour the plugin was tested against.
      */
-    public const API_VERSION = '2023-10-16';
+    public const API_VERSION = '2026-08-26.dahlia';
 
     /**
      * Optional test override: a closure receiving the secret key and returning

@@ -9,8 +9,12 @@ describe('ClientFactory', function (): void {
         expect(ClientFactory::make(''))->toBeNull();
     });
 
-    it('pins the Stripe API version the plugin is written against', function (): void {
-        expect(ClientFactory::API_VERSION)->toBe('2023-10-16');
+    it('pins the Stripe API version the bundled SDK targets', function (): void {
+        // Pinning behind the SDK makes Stripe return a "stripe-notice" header,
+        // which stripe-php 21+ raises as an E_USER_WARNING on every API call.
+        // On a live store that is a PHP warning per order, so this must fail
+        // the moment the SDK is updated without moving the pin with it.
+        expect(ClientFactory::API_VERSION)->toBe(\Stripe\Util\ApiVersion::CURRENT);
     });
 
     it('honours an injected client factory', function (): void {
