@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- `translate:pot` now scans `templates/` as well. It only looked at the plugin file
+  and `src/`, so every string in the awaiting-transfer email templates was dropped
+  from the POT, and their German translations were deleted from both locales on any
+  `bun run translate`. Latent since the email templates were added.
 - The GiroCode no longer falls back to the shop name when Stripe omits
   `account_holder_name`. Encoding a beneficiary the IBAN is not registered under
   guarantees a Verification of Payee mismatch on a payment we generated ourselves,

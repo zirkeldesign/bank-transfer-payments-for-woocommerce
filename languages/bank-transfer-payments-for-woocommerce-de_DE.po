@@ -153,7 +153,7 @@ msgid "Generates unique bank account details for this customer to receive transf
 msgstr "Erzeugt eindeutige Bankverbindungsdaten, über die dieser Kunde Überweisungen empfangen kann."
 
 #: src/Admin/CustomerBalanceDisplay.php:374
-#: src/Gateway/BankTransferGateway.php:775
+#: src/Gateway/BankTransferGateway.php:801
 msgid "Bank Account"
 msgstr "Bankkonto"
 
@@ -307,27 +307,27 @@ msgid "Select the type of bank transfer to accept."
 msgstr "Wähle die Art der Banküberweisung, die akzeptiert werden soll."
 
 #: src/Gateway/BankTransferGateway.php:246
-#: src/Gateway/BankTransferGateway.php:770
+#: src/Gateway/BankTransferGateway.php:796
 msgid "EU Bank Account (SEPA)"
 msgstr "EU-Bankkonto (SEPA)"
 
 #: src/Gateway/BankTransferGateway.php:247
-#: src/Gateway/BankTransferGateway.php:772
+#: src/Gateway/BankTransferGateway.php:798
 msgid "UK Bank Account (Bacs)"
 msgstr "UK-Bankkonto (Bacs)"
 
 #: src/Gateway/BankTransferGateway.php:248
-#: src/Gateway/BankTransferGateway.php:771
+#: src/Gateway/BankTransferGateway.php:797
 msgid "US Bank Account (ACH)"
 msgstr "US-Bankkonto (ACH)"
 
 #: src/Gateway/BankTransferGateway.php:249
-#: src/Gateway/BankTransferGateway.php:774
+#: src/Gateway/BankTransferGateway.php:800
 msgid "Japanese Bank Account"
 msgstr "Japanisches Bankkonto"
 
 #: src/Gateway/BankTransferGateway.php:250
-#: src/Gateway/BankTransferGateway.php:773
+#: src/Gateway/BankTransferGateway.php:799
 msgid "Mexican Bank Account (SPEI)"
 msgstr "Mexikanisches Bankkonto (SPEI)"
 
@@ -403,55 +403,55 @@ msgid "An error occurred while processing your payment. Please try again."
 msgstr "Bei der Verarbeitung deiner Zahlung ist ein Fehler aufgetreten. Bitte versuche es erneut."
 
 #: src/Gateway/BankTransferGateway.php:718
-#: src/Gateway/BankTransferGateway.php:903
+#: src/Gateway/BankTransferGateway.php:939
 msgid "Bank Transfer Instructions"
 msgstr "Anweisungen zur Banküberweisung"
 
 #: src/Gateway/BankTransferGateway.php:719
-#: src/Gateway/BankTransferGateway.php:904
+#: src/Gateway/BankTransferGateway.php:940
 msgid "Please transfer the funds to the following bank account:"
 msgstr "Bitte überweise den Betrag auf das folgende Bankkonto:"
 
-#: src/Gateway/BankTransferGateway.php:805
-#: src/Gateway/BankTransferGateway.php:810
-#: src/Gateway/BankTransferGateway.php:819
+#: src/Gateway/BankTransferGateway.php:831
+#: src/Gateway/BankTransferGateway.php:837
+#: src/Gateway/BankTransferGateway.php:845
 msgid "Account Number:"
 msgstr "Kontonummer:"
 
-#: src/Gateway/BankTransferGateway.php:806
+#: src/Gateway/BankTransferGateway.php:832
 msgid "Routing Number:"
 msgstr "Routing-Nummer:"
 
-#: src/Gateway/BankTransferGateway.php:800
+#: src/Gateway/BankTransferGateway.php:827
 msgid "IBAN:"
 msgstr "IBAN:"
 
-#: src/Gateway/BankTransferGateway.php:801
+#: src/Gateway/BankTransferGateway.php:828
 msgid "BIC:"
 msgstr "BIC:"
 
-#: src/Gateway/BankTransferGateway.php:811
+#: src/Gateway/BankTransferGateway.php:838
 msgid "Sort Code:"
 msgstr "Sort Code:"
 
-#: src/Gateway/BankTransferGateway.php:815
+#: src/Gateway/BankTransferGateway.php:841
 msgid "CLABE:"
 msgstr "CLABE:"
 
-#: src/Gateway/BankTransferGateway.php:752
+#: src/Gateway/BankTransferGateway.php:756
 msgid "Amount:"
 msgstr "Betrag:"
 
-#: src/Gateway/BankTransferGateway.php:753
+#: src/Gateway/BankTransferGateway.php:757
 msgid "Order Number:"
 msgstr "Bestellnummer:"
 
-#: src/Gateway/BankTransferGateway.php:756
+#: src/Gateway/BankTransferGateway.php:760
 msgid "View Full Instructions"
 msgstr "Vollständige Anweisungen ansehen"
 
-#: src/Gateway/BankTransferGateway.php:760
-#: src/Gateway/BankTransferGateway.php:922
+#: src/Gateway/BankTransferGateway.php:764
+#: src/Gateway/BankTransferGateway.php:966
 msgid "Important: Please include your order number as the payment reference."
 msgstr "Wichtig: Bitte gib deine Bestellnummer als Verwendungszweck an."
 
@@ -579,7 +579,7 @@ msgstr "In Wartestellung"
 msgid "Pending payment"
 msgstr "Zahlung ausstehend"
 
-#: src/Gateway/BankTransferGateway.php:857
+#: src/Gateway/BankTransferGateway.php:893
 msgid "Scan this GiroCode with your banking app to pre-fill the transfer."
 msgstr "Scanne diesen GiroCode mit deiner Banking-App, um die Überweisung vorauszufüllen."
 
@@ -621,21 +621,21 @@ msgstr "Pro"
 msgid "Partial bank transfer received: %1$s of %2$s (minor units). Awaiting the remaining amount."
 msgstr "Teilzahlung per Banküberweisung erhalten: %1$s von %2$s (kleinste Währungseinheit). Der Restbetrag steht noch aus."
 
-#: src/Gateway/BankTransferGateway.php:802
-#: src/Gateway/BankTransferGateway.php:812
+#: src/Gateway/BankTransferGateway.php:826
+#: src/Gateway/BankTransferGateway.php:836
 msgid "Account Holder Name:"
 msgstr "Name des Kontoinhabers:"
 
-#: src/Gateway/BankTransferGateway.php:807
-#: src/Gateway/BankTransferGateway.php:816
+#: src/Gateway/BankTransferGateway.php:833
+#: src/Gateway/BankTransferGateway.php:842
 msgid "Bank Name:"
 msgstr "Name der Bank:"
 
-#: src/Gateway/BankTransferGateway.php:820
+#: src/Gateway/BankTransferGateway.php:846
 msgid "Bank Code:"
 msgstr "Bankleitzahl:"
 
-#: src/Gateway/BankTransferGateway.php:821
+#: src/Gateway/BankTransferGateway.php:847
 msgid "Branch Code:"
 msgstr "Filialnummer:"
 
@@ -658,6 +658,10 @@ msgstr "Bitte überweise den offenen Betrag"
 #: src/Email/AwaitingTransferEmail.php:128
 msgid "Your order ships as soon as the transfer arrives. Bank transfers usually take one to three business days."
 msgstr "Deine Bestellung wird versendet, sobald die Überweisung eingegangen ist. Banküberweisungen dauern in der Regel ein bis drei Werktage."
+
+#: src/Gateway/BankTransferGateway.php:786
+msgid "Your bank checks the recipient name against the IBAN before releasing the transfer. Please enter the account holder name exactly as shown above. The payment is handled by our payment provider, so this name can differ from our shop name - that is normal."
+msgstr "Deine Bank prüft den Empfängernamen gegen die IBAN, bevor die Überweisung ausgeführt wird. Bitte übernimm den Kontoinhaber genau so, wie er oben steht. Die Zahlung wickelt unser Zahlungsdienstleister ab, deshalb kann dieser Name von unserem Shop-Namen abweichen - das ist normal."
 
 #. translators: %s: Customer first name.
 #: templates/emails/customer-awaiting-transfer.php:20
