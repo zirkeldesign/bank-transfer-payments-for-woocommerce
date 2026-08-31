@@ -762,7 +762,29 @@ final class BankTransferGateway extends WC_Payment_Gateway
         echo '</div>';
 
         echo '<p class="btpw-important-notice">'.esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce').'</p>';
+
+        if ($sepaAddress !== null) {
+            echo '<p class="btpw-vop-notice">'.esc_html(self::vopNotice()).'</p>';
+        }
+
         echo '</section>';
+    }
+
+    /**
+     * The Verification of Payee note shown alongside SEPA transfer details.
+     *
+     * Since 9 October 2025 the payer's bank checks the beneficiary name against
+     * the IBAN before releasing a SEPA credit transfer. The payee of record here
+     * is Stripe's business name rather than the shop name, so without this note
+     * the customer reads their bank's mismatch warning as a sign of fraud and
+     * abandons the transfer.
+     */
+    public static function vopNotice(): string
+    {
+        return (string) apply_filters(
+            'btpw_vop_notice',
+            __('Your bank checks the recipient name against the IBAN before releasing the transfer. Please enter the account holder name exactly as shown above. The payment is handled by our payment provider, so this name can differ from our shop name - that is normal.', 'bank-transfer-payments-for-woocommerce')
+        );
     }
 
     /**
@@ -801,9 +823,9 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
         $rows = match ($type) {
             'iban' => [
+                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
                 __('IBAN:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['iban'] ?? ''),
                 __('BIC:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bic'] ?? ''),
-                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
             ],
             'aba' => [
                 __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
@@ -811,9 +833,9 @@ final class BankTransferGateway extends WC_Payment_Gateway
                 __('Bank Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
             ],
             'sort_code' => [
+                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
                 __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
                 __('Sort Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['sort_code'] ?? ''),
-                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
             ],
             'spei' => [
                 __('CLABE:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['clabe'] ?? ''),
@@ -841,8 +863,18 @@ final class BankTransferGateway extends WC_Payment_Gateway
             return;
         }
 
+        // The beneficiary name must be the one the IBAN is registered under, or
+        // the payer's bank reports a Verification of Payee mismatch on a payment
+        // we generated ourselves. Falling back to the shop name guarantees that,
+        // so drop the QR code instead and let the customer use the table above.
+        $accountHolderName = trim((string) ($sepa['account_holder_name'] ?? ''));
+
+        if ($accountHolderName === '') {
+            return;
+        }
+
         $payload = GiroCode::payload(
-            (string) ($sepa['account_holder_name'] ?? get_bloginfo('name')),
+            $accountHolderName,
             (string) ($sepa['iban'] ?? ''),
             (string) ($sepa['bic'] ?? ''),
             (float) $order->get_total(),
@@ -907,6 +939,8 @@ final class BankTransferGateway extends WC_Payment_Gateway
         echo "\n".esc_html__('Bank Transfer Instructions', 'bank-transfer-payments-for-woocommerce')."\n";
         echo esc_html__('Please transfer the funds to the following bank account:', 'bank-transfer-payments-for-woocommerce')."\n\n";
 
+        $hasSepa = false;
+
         foreach ($bankDetails['financial_addresses'] as $address) {
             $rows = self::financialAddressRows($address);
 
@@ -914,7 +948,13 @@ final class BankTransferGateway extends WC_Payment_Gateway
                 continue;
             }
 
-            echo esc_html(self::financialAddressLabel((string) ($address['type'] ?? '')))."\n";
+            $type = (string) ($address['type'] ?? '');
+
+            if ($type === 'iban') {
+                $hasSepa = true;
+            }
+
+            echo esc_html(self::financialAddressLabel($type))."\n";
 
             foreach ($rows as $label => $value) {
                 echo esc_html($label.' '.$value)."\n";
@@ -924,6 +964,10 @@ final class BankTransferGateway extends WC_Payment_Gateway
         }
 
         echo esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce')."\n";
+
+        if ($hasSepa) {
+            echo esc_html(self::vopNotice())."\n";
+        }
     }
 
     private function get_order_total_in_cents(WC_Order $order): int

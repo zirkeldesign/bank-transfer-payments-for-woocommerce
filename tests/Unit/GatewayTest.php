@@ -187,9 +187,104 @@ describe('Stripe financial address rendering', function (): void {
         expect($rows)->toHaveCount(1);
     });
 
+    it('shows the account holder name first, since VoP checks it against the IBAN', function (): void {
+        $rows = BankTransferGateway::financialAddressRows([
+            'type' => 'iban',
+            'iban' => ['iban' => 'DE89370400440532013000', 'bic' => 'COBADEFFXXX', 'account_holder_name' => 'Stripe Payments Europe, Limited'],
+        ]);
+
+        expect(array_key_first($rows))->toContain('Account Holder Name')
+            ->and(reset($rows))->toBe('Stripe Payments Europe, Limited');
+    });
+
+    it('shows the account holder name first for UK sort_code accounts too', function (): void {
+        $rows = BankTransferGateway::financialAddressRows([
+            'type' => 'sort_code',
+            'sort_code' => ['account_number' => '00012345', 'sort_code' => '108800', 'account_holder_name' => 'Acme Ltd'],
+        ]);
+
+        expect(array_key_first($rows))->toContain('Account Holder Name')
+            ->and(reset($rows))->toBe('Acme Ltd');
+    });
+
     it('labels each Stripe address type', function (): void {
         expect(BankTransferGateway::financialAddressLabel('iban'))->toContain('SEPA')
             ->and(BankTransferGateway::financialAddressLabel('aba'))->toContain('ACH')
             ->and(BankTransferGateway::financialAddressLabel('zengin'))->toContain('Japanese');
+    });
+});
+
+describe('Verification of Payee notice', function (): void {
+    function btpw_test_thankyou_html(array $ibanData): string
+    {
+        $order = new WC_Order(id: 4711, currency: 'EUR', total: 100.0);
+        $order->update_meta_data('_stripe_bank_transfer_details', (string) wp_json_encode([
+            'financial_addresses' => [['type' => 'iban', 'iban' => $ibanData]],
+        ]));
+        $GLOBALS['btpw_test_orders'][4711] = $order;
+
+        ob_start();
+        (new BankTransferGateway)->thankyou_page(4711);
+
+        return (string) ob_get_clean();
+    }
+
+    it('explains the bank name-match check on SEPA instructions', function (): void {
+        $html = btpw_test_thankyou_html([
+            'iban' => 'DE89370400440532013000',
+            'bic' => 'COBADEFFXXX',
+            'account_holder_name' => 'Stripe Payments Europe, Limited',
+        ]);
+
+        expect($html)->toContain('btpw-vop-notice')
+            ->and($html)->toContain('checks the recipient name against the IBAN');
+    });
+
+    it('leaves the notice off non-SEPA instructions', function (): void {
+        $order = new WC_Order(id: 4712, currency: 'USD', total: 100.0);
+        $order->update_meta_data('_stripe_bank_transfer_details', (string) wp_json_encode([
+            'financial_addresses' => [['type' => 'aba', 'aba' => ['account_number' => '000123456789', 'routing_number' => '110000000']]],
+        ]));
+        $GLOBALS['btpw_test_orders'][4712] = $order;
+
+        ob_start();
+        (new BankTransferGateway)->thankyou_page(4712);
+        $html = (string) ob_get_clean();
+
+        expect($html)->not->toContain('btpw-vop-notice');
+    });
+
+    it('lets a shop reword the notice via btpw_vop_notice', function (): void {
+        add_filter('btpw_vop_notice', fn (): string => 'Bitte den Kontoinhaber exakt uebernehmen.');
+
+        expect(BankTransferGateway::vopNotice())->toBe('Bitte den Kontoinhaber exakt uebernehmen.');
+    });
+});
+
+describe('GiroCode beneficiary', function (): void {
+    it('encodes the Stripe account holder name as the beneficiary', function (): void {
+        $html = btpw_test_thankyou_html([
+            'iban' => 'DE89370400440532013000',
+            'bic' => 'COBADEFFXXX',
+            'account_holder_name' => 'Stripe Payments Europe, Limited',
+        ]);
+
+        expect($html)->toContain('btpw-girocode');
+
+        preg_match('/data-girocode="([^"]+)"/', $html, $matches);
+
+        expect(base64_decode($matches[1]))->toContain('Stripe Payments Europe, Limited');
+    });
+
+    it('drops the QR code rather than guessing a beneficiary Stripe did not send', function (): void {
+        // Encoding the shop name here would pre-fill a payee that can never
+        // match the IBAN, so the customer's bank flags our own payment.
+        $html = btpw_test_thankyou_html([
+            'iban' => 'DE89370400440532013000',
+            'bic' => 'COBADEFFXXX',
+        ]);
+
+        expect($html)->not->toContain('btpw-girocode')
+            ->and($html)->not->toContain('Test Shop');
     });
 });

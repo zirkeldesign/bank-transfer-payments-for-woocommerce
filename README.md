@@ -25,6 +25,13 @@ Built DACH-first: SEPA / EUR is the default.
 4. When the transfer lands, Stripe fires `payment_intent.succeeded`; the signed
    webhook marks the order paid.
 
+Because Stripe holds the receiving account, the payee shown to the customer is your
+Stripe **Business Name** (Dashboard → Settings → Business details), not your shop name.
+That is also the name Stripe answers SEPA *Verification of Payee* checks with, mandatory
+EU-wide since 9 October 2025, so the instructions surface it first and explain the
+name-match notice a customer's bank may show. Reword that note with the `btpw_vop_notice`
+filter.
+
 ## Stripe credential reuse
 
 If the official WooCommerce Stripe Gateway, Payment Plugins for Stripe

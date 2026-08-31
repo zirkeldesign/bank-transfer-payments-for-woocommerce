@@ -6,6 +6,26 @@ developers; the end-user changelog lives in `readme.txt`.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- The GiroCode no longer falls back to the shop name when Stripe omits
+  `account_holder_name`. Encoding a beneficiary the IBAN is not registered under
+  guarantees a Verification of Payee mismatch on a payment we generated ourselves,
+  so the QR code is now dropped instead and the customer uses the details table.
+
+### Changed
+- Tested up to WordPress 7.1. Dev-only toolchain updated to match: `wordpress-stubs`
+  7.1, `woocommerce-stubs` 11.0, PHPStan 2.2.10. None of these ship in the plugin zip.
+- "Account Holder Name" is now the first row for SEPA (`iban`) and Bacs
+  (`sort_code`) addresses. Since VoP became mandatory on 9 October 2025 it is the
+  field the customer must transcribe most carefully.
+- SEPA payment instructions carry a Verification of Payee note explaining that the
+  payer's bank checks the recipient name against the IBAN, and that the payee of
+  record is the Stripe business name rather than the shop name. Filterable via
+  `btpw_vop_notice`; shown on the thank-you page and in both HTML and plain-text
+  emails.
+
 ## [1.0.0] - 2026-08-13
 
 Initial release.

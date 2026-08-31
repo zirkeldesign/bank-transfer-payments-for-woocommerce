@@ -2,7 +2,7 @@
 Contributors: dsturm
 Tags: bank transfer, vorkasse, banküberweisung, sepa, iban
 Requires at least: 6.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.3
 Stable tag: 1.0.0
 License: GPL-2.0-or-later
@@ -69,10 +69,19 @@ Bank transfers do not support disputes in the way cards do, which is part of the
 = What if a customer transfers too little? =
 Stripe holds the part-payment in the customer balance and waits for the rest. The plugin records the shortfall as an order note so you can follow up.
 
+= My customer's bank says the recipient name does not match. What now? =
+Since 9 October 2025 every SEPA transfer in the EU/EEA goes through Verification of Payee: the customer's bank checks the recipient name against the IBAN before releasing the payment. Nothing is required of your shop technically, the bank does this on its own. The account that receives the money is held by Stripe, so the name to enter is the one shown as "Account Holder Name" in the payment instructions, not your shop name. That is the exact name Stripe answers the check with, and it comes from Business Name under Settings → Business details in your Stripe Dashboard. If a customer reports a mismatch, check that field first. For Belgian virtual IBANs Stripe currently advises customers to confirm the warning after verifying the details are correct.
+
 = Does it support WooCommerce Subscriptions? =
 Bank transfers cannot be charged automatically, so subscription renewals are always manual: each renewal issues a fresh virtual bank account for the customer to pay. This is available as an optional add-on feature.
 
 == Changelog ==
+
+= 1.0.1 =
+* Improved: Tested with WordPress 7.1.
+* Improved: Payment instructions now explain the SEPA recipient-name check (Verification of Payee) so customers know a name notice from their bank is normal.
+* Improved: The account holder name is shown first in the bank details, as it is the field banks now verify.
+* Fixed: The GiroCode is no longer generated with a guessed recipient name when Stripe does not supply one.
 
 = 1.0.0 =
 * Initial release: Stripe bank-transfer gateway with per-order virtual bank accounts and automatic webhook reconciliation.

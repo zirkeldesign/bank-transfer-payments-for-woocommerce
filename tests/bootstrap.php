@@ -43,6 +43,7 @@ function btpw_test_reset(): void
     $GLOBALS['btpw_test_options'] = [];
     $GLOBALS['btpw_test_orders'] = [];
     $GLOBALS['btpw_test_gateway_settings'] = [];
+    $GLOBALS['btpw_test_filters'] = [];
 }
 
 /**
@@ -154,12 +155,24 @@ if (! function_exists('wp_kses_post')) {
 if (! function_exists('apply_filters')) {
     function apply_filters(string $hook, mixed $value, mixed ...$args): mixed
     {
+        $callbacks = $GLOBALS['btpw_test_filters'][$hook] ?? [];
+
+        ksort($callbacks);
+
+        foreach ($callbacks as $byPriority) {
+            foreach ($byPriority as $cb) {
+                $value = $cb($value, ...$args);
+            }
+        }
+
         return $value;
     }
 }
 if (! function_exists('add_filter')) {
     function add_filter(string $hook, callable $cb, int $priority = 10, int $args = 1): bool
     {
+        $GLOBALS['btpw_test_filters'][$hook][$priority][] = $cb;
+
         return true;
     }
 }
@@ -205,6 +218,15 @@ if (! function_exists('get_bloginfo')) {
     {
         return 'Test Shop';
     }
+}
+if (! function_exists('wc_price')) {
+    function wc_price(float $price, array $args = []): string
+    {
+        return number_format($price, 2, '.', '').' '.((string) ($args['currency'] ?? 'EUR'));
+    }
+}
+if (! function_exists('wp_enqueue_script')) {
+    function wp_enqueue_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = false): void {}
 }
 if (! function_exists('wp_json_encode')) {
     function wp_json_encode(mixed $data): string|false
