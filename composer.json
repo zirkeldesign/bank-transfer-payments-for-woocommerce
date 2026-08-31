@@ -81,6 +81,7 @@
         "format:test": "pint --test",
         "phpstan": "phpstan analyse --memory-limit=1G",
         "test": "pest",
+        "translate:check": "php scripts/check-translations.php",
         "test:browser": "pest tests/Browser",
         "pcp": "bash bin/plugin-check.sh",
         "test:integration": "pest -c phpunit.integration.xml",

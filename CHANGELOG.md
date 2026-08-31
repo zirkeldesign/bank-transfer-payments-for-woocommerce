@@ -6,6 +6,14 @@ developers; the end-user changelog lives in `readme.txt`.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- CI now runs Plugin Check against the built zip and a translation completeness
+  check. Both cover failure modes nothing caught before: "Tested up to" drift is
+  silent until the plugin disappears from wp.org search, and a lost `msgstr` still
+  parses, still builds a `.mo`, and is invisible to the test suite.
+
 ## [1.0.1] - 2026-08-31
 
 ### Fixed

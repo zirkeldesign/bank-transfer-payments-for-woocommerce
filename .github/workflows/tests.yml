@@ -51,3 +51,36 @@ jobs:
           coverage: none
       - run: composer install --no-interaction --prefer-dist
       - run: composer test
+
+  translations:
+    name: Translations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      # No composer install: the check only parses languages/*.po.
+      - run: composer translate:check
+
+  plugin-check:
+    name: Plugin Check (WordPress.org)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite
+          coverage: none
+          tools: composer, wp-cli
+      - run: composer install --no-interaction --prefer-dist
+      - name: Install wp-cli dist-archive
+        run: wp package install wp-cli/dist-archive-command --allow-root
+      # Runs the same checker WordPress.org's review bot runs, against the
+      # BUILT zip rather than the checkout, so .distignore and the Strauss
+      # scoping are covered too. Catches "Tested up to" drift on every new
+      # WordPress release, which is otherwise silent until the plugin drops
+      # out of wp.org search.
+      - run: composer pcp
