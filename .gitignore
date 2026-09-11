@@ -18,7 +18,10 @@ wp-content/backups/
 Thumbs.db
 
 # Composer
-composer.lock
+# composer.lock IS tracked: this plugin ships stripe-php inside the zip, so the
+# lock is what pins the version that was actually tested. Without it a CI build
+# resolves afresh and can bundle a different SDK than the one verified locally.
+# .distignore keeps it out of the zip, which is a separate concern.
 composer.phar
 
 # NPM
