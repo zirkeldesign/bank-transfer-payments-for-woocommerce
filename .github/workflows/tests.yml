@@ -77,17 +77,24 @@ jobs:
           tools: composer, wp-cli
       - run: composer install --no-interaction --prefer-dist
       - name: Install wp-cli dist-archive
-        # setup-php puts a github-oauth token into the global Composer config,
-        # and wp package install reuses it. Composer rejects that token as
-        # containing invalid characters, which killed the job before it ever
-        # reached the checker - and supplying the Actions token instead made no
-        # difference. dist-archive-command is a public repository, so the fix is
-        # to authenticate not at all rather than to authenticate correctly.
+        # Two separate traps here, both of which killed the job before it ever
+        # reached the checker.
+        #
+        # setup-php puts a github-oauth token into the global Composer config and
+        # wp package install reuses it; Composer rejects it as containing invalid
+        # characters, and supplying the Actions token instead made no difference.
+        # dist-archive-command is public, so the fix is to authenticate not at all.
+        #
+        # The version is pinned because dev-main now requires wp-cli ^3, while
+        # setup-php ships 2.12 - and the 3.2.x tags want ^2.13, which does not
+        # exist yet either. v3.1.0 is the newest tag that runs on wp-cli 2.12, and
+        # pinning it also keeps the CI build byte-identical to the local one
+        # instead of tracking a moving branch.
         env:
           COMPOSER_AUTH: '{}'
         run: |
           composer global config --no-plugins --unset github-oauth.github.com 2>/dev/null || true
-          wp package install wp-cli/dist-archive-command --allow-root
+          wp package install wp-cli/dist-archive-command:v3.1.0 --allow-root
       # Runs the same checker WordPress.org's review bot runs, against the
       # BUILT zip rather than the checkout, so .distignore and the Strauss
       # scoping are covered too. Catches "Tested up to" drift on every new
