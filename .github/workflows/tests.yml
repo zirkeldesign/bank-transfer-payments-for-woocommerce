@@ -77,7 +77,16 @@ jobs:
           tools: composer, wp-cli
       - run: composer install --no-interaction --prefer-dist
       - name: Install wp-cli dist-archive
-        run: wp package install wp-cli/dist-archive-command --allow-root
+        # setup-php writes a github-oauth entry into the global Composer config,
+        # and wp package install reuses it - it failed here with "github oauth
+        # token contains invalid characters". COMPOSER_AUTH takes precedence
+        # over that file, so setting it explicitly sidesteps whatever ends up
+        # in there and also lifts the anonymous API rate limit.
+        env:
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GITHUB_TOKEN }}"}}'
+        run: |
+          composer global config --list 2>/dev/null | grep -iE '^\[github-oauth' || echo 'no github-oauth in the global config'
+          wp package install wp-cli/dist-archive-command --allow-root
       # Runs the same checker WordPress.org's review bot runs, against the
       # BUILT zip rather than the checkout, so .distignore and the Strauss
       # scoping are covered too. Catches "Tested up to" drift on every new
