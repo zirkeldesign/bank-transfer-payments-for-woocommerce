@@ -85,6 +85,7 @@
         "test:browser": "pest tests/Browser",
         "pcp": "bash bin/plugin-check.sh",
         "test:integration": "pest -c phpunit.integration.xml",
-        "test:integration:setup": "./scripts/integration-env.sh"
+        "test:integration:setup": "./scripts/integration-env.sh",
+        "test:e2e": "bash scripts/e2e.sh"
     }
 }

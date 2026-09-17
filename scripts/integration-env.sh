@@ -71,6 +71,41 @@ rm -rf "$PLUGINS_DIR/bank-transfer-payments-for-woocommerce"
 ln -s "$PLUGIN_DIR" "$PLUGINS_DIR/bank-transfer-payments-for-woocommerce"
 wp plugin activate bank-transfer-payments-for-woocommerce --path="$WP_DIR" --quiet || true
 
+# --- storefront the browser suite can actually reach -------------------------
+# None of this matters to the PHP integration suite, which boots WordPress in
+# process and never speaks HTTP. The browser suite does, and without these three
+# the checkout is unreachable in ways that look like plugin bugs:
+#
+#   permalinks   a fresh install is on "plain", so /checkout/ serves the blog
+#   coming soon  WooCommerce 9.1+ puts new stores behind a launch screen
+#   a product    an empty cart renders no payment methods at all
+echo "› Preparing the storefront for browser tests"
+wp rewrite structure '/%postname%/' --path="$WP_DIR" --quiet
+wp rewrite flush --path="$WP_DIR" --quiet
+wp option update woocommerce_coming_soon no --path="$WP_DIR" --quiet
+
+# The gateway has to be switched on, or the checkout shows no payment method
+# and the browser suite fails in a way that looks like a BlocksSupport bug.
+# is_available() does not check the key, so the first browser test works without
+# one; only the test that really places an order needs it.
+STRIPE_KEY="${BTPW_STRIPE_TEST_KEY:-$( [[ -f "$PLUGIN_DIR/.stripe-test-key" ]] && tr -d '[:space:]' < "$PLUGIN_DIR/.stripe-test-key" )}"
+BTPW_STRIPE_KEY="$STRIPE_KEY" wp eval '
+    $s = (array) get_option("woocommerce_stripe_bank_transfer_settings", []);
+    $s["enabled"]  = "yes";
+    $s["testmode"] = "yes";
+    $key = (string) getenv("BTPW_STRIPE_KEY");
+    if ($key !== "") {
+        $s["test_secret_key"] = $key;
+    }
+    $s += ["transfer_type" => "eu_bank_transfer", "default_currency" => "eur"];
+    update_option("woocommerce_stripe_bank_transfer_settings", $s);
+' --path="$WP_DIR" --quiet
+
+if [[ -z "$(wp post list --post_type=product --format=ids --path="$WP_DIR" 2>/dev/null)" ]]; then
+    wp wc product create --name="Lastenrad Testartikel" --type=simple --regular_price=249 \
+        --status=publish --user=admin --path="$WP_DIR" --porcelain --quiet
+fi
+
 echo
 echo "✅ Environment ready at $WP_DIR"
 wp plugin list --path="$WP_DIR" --fields=name,status --format=table

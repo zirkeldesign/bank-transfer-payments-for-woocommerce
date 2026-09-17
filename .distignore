@@ -17,6 +17,7 @@ pint.json
 phpunit.xml
 composer.lock
 package.json
+package-lock.json
 bun.lock
 bun.lockb
 node_modules

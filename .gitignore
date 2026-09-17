@@ -25,7 +25,12 @@ Thumbs.db
 composer.phar
 
 # NPM
-package-lock.json
+# package-lock.json IS tracked: CI installs Playwright from it, and an
+# untracked lock lets a CI run pull a different browser driver than the one
+# the suite was verified against. Same reasoning as composer.lock above.
+
+# Screenshots the browser suite writes when an assertion fails
+tests/Browser/Screenshots/
 yarn.lock
 
 # Build files

@@ -8,5 +8,8 @@
     "translate:pot": "wp i18n make-pot . ./languages/bank-transfer-payments-for-woocommerce.pot --slug=bank-transfer-payments-for-woocommerce --domain=bank-transfer-payments-for-woocommerce --include='bank-transfer-payments-for-woocommerce.php,src,templates' --exclude='node_modules,vendor,tests,dist,assets'",
     "translate:update": "for file in ./languages/*.po; do wp i18n update-po ./languages/bank-transfer-payments-for-woocommerce.pot \"$file\"; done",
     "translate:mo": "wp i18n make-mo ./languages ./languages"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
   }
 }
