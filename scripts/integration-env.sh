@@ -88,7 +88,14 @@ wp option update woocommerce_coming_soon no --path="$WP_DIR" --quiet
 # and the browser suite fails in a way that looks like a BlocksSupport bug.
 # is_available() does not check the key, so the first browser test works without
 # one; only the test that really places an order needs it.
-STRIPE_KEY="${BTPW_STRIPE_TEST_KEY:-$( [[ -f "$PLUGIN_DIR/.stripe-test-key" ]] && tr -d '[:space:]' < "$PLUGIN_DIR/.stripe-test-key" )}"
+# Written as an if rather than inline: under `set -e` a failing test inside a
+# command substitution aborts the whole script, so a missing key file would
+# take the environment build down with it - which is exactly what CI hits and
+# a developer with the file never sees.
+STRIPE_KEY="${BTPW_STRIPE_TEST_KEY:-}"
+if [[ -z "$STRIPE_KEY" && -f "$PLUGIN_DIR/.stripe-test-key" ]]; then
+    STRIPE_KEY="$(tr -d '[:space:]' < "$PLUGIN_DIR/.stripe-test-key")"
+fi
 BTPW_STRIPE_KEY="$STRIPE_KEY" wp eval '
     $s = (array) get_option("woocommerce_stripe_bank_transfer_settings", []);
     $s["enabled"]  = "yes";
@@ -103,7 +110,7 @@ BTPW_STRIPE_KEY="$STRIPE_KEY" wp eval '
 
 if [[ -z "$(wp post list --post_type=product --format=ids --path="$WP_DIR" 2>/dev/null)" ]]; then
     wp wc product create --name="Lastenrad Testartikel" --type=simple --regular_price=249 \
-        --status=publish --user=admin --path="$WP_DIR" --porcelain --quiet
+        --status=publish --user=admin --path="$WP_DIR" --porcelain --quiet >/dev/null
 fi
 
 echo
