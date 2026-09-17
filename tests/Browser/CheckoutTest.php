@@ -40,7 +40,11 @@ $skipReason = 'Set BTPW_E2E_URL to a running WooCommerce store to run browser e2
 // Placing a real order calls Stripe, so that test needs a test key. The gateway
 // itself does not check for one in is_available(), so the checkout test above
 // still runs without it - which is the part CI can cover unattended.
-$hasStripeKey = getenv('BTPW_STRIPE_TEST_KEY') !== false || file_exists(__DIR__.'/../../.stripe-test-key');
+// Compared against '' rather than false: GitHub Actions sets an unfilled
+// secret as an EMPTY variable, not an absent one, so getenv() returns '' and a
+// !== false check reports a key that is not there.
+$hasStripeKey = ((string) getenv('BTPW_STRIPE_TEST_KEY')) !== ''
+    || file_exists(__DIR__.'/../../.stripe-test-key');
 $noKeyReason = 'Set BTPW_STRIPE_TEST_KEY (or write .stripe-test-key) to place a real order.';
 
 /**
