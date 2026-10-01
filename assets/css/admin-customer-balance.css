@@ -1,0 +1,106 @@
+/*
+ * Admin styles for the customer balance panel.
+ *
+ * Deliberately native: this mirrors WordPress core's own surfaces (.postbox
+ * borders and backgrounds, the standard grey palette) and uses
+ * --wp-admin-theme-color for accents so the panel follows whichever admin
+ * colour scheme the user has chosen. No gradients, no animation, no custom
+ * design language — it should be indistinguishable from core.
+ *
+ * Verified against WordPress 7.0.
+ */
+
+.btpw-customer-balance-section {
+	/* Matches core .postbox. */
+	margin: 1em 0;
+	padding: 1em 1.25em;
+	border: 1px solid #c3c4c7;
+	background: #fff;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+
+.btpw-customer-balance-section h3 {
+	margin: 1.5em 0 0.5em;
+	font-size: 14px;
+}
+
+.btpw-customer-balance-section h3:first-child {
+	margin-top: 0;
+}
+
+.btpw-customer-balance-section table.widefat {
+	margin-top: 0.5em;
+}
+
+/*
+ * Balance figures. Core's semantic colours: green for money in, red for money
+ * out, grey for nothing yet. Weight and colour only — no pill backgrounds,
+ * which WordPress does not use for inline values.
+ */
+.btpw-balance {
+	font-weight: 600;
+}
+
+.btpw-balance-positive {
+	color: #007017;
+}
+
+.btpw-balance-negative {
+	color: #b32d2e;
+}
+
+.btpw-balance-zero {
+	color: #646970;
+}
+
+.btpw-addresses-intro {
+	margin-bottom: 0.75em;
+}
+
+/* Virtual bank account block, styled as a core sub-panel. */
+.btpw-address-box {
+	margin: 0 0 1em;
+	padding: 0.75em 1em;
+	border: 1px solid #dcdcde;
+	background: #f6f7f7;
+}
+
+.btpw-address-box h4 {
+	margin: 0 0 0.5em;
+	font-size: 13px;
+	color: #1d2327;
+}
+
+.btpw-address-table {
+	background: #fff;
+}
+
+.btpw-address-table th {
+	width: 200px;
+	font-weight: 400;
+	color: #50575e;
+}
+
+.btpw-address-table code {
+	font-size: 13px;
+}
+
+.btpw-create-account {
+	margin: 1em 0 2em;
+}
+
+.btpw-create-account .spinner {
+	float: none;
+	margin: 0 0 0 8px;
+	vertical-align: middle;
+}
+
+.btpw-create-account .description {
+	margin-top: 0.5em;
+}
+
+/* Focus ring consistent with core's, respecting the admin colour scheme. */
+.btpw-customer-balance-section .button:focus {
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	box-shadow: 0 0 0 var(--wp-admin-border-width-focus, 1px) var(--wp-admin-theme-color, #2271b1);
+}

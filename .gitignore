@@ -18,11 +18,19 @@ wp-content/backups/
 Thumbs.db
 
 # Composer
-composer.lock
+# composer.lock IS tracked: this plugin ships stripe-php inside the zip, so the
+# lock is what pins the version that was actually tested. Without it a CI build
+# resolves afresh and can bundle a different SDK than the one verified locally.
+# .distignore keeps it out of the zip, which is a separate concern.
 composer.phar
 
 # NPM
-package-lock.json
+# package-lock.json IS tracked: CI installs Playwright from it, and an
+# untracked lock lets a CI run pull a different browser driver than the one
+# the suite was verified against. Same reasoning as composer.lock above.
+
+# Screenshots the browser suite writes when an assertion fails
+tests/Browser/Screenshots/
 yarn.lock
 
 # Build files
@@ -42,3 +50,12 @@ yarn.lock
 *.bak
 *.swp
 *~
+
+# Build artefacts
+/build/
+/vendor-prefixed/
+/bin/strauss.phar
+
+# Integration-test WordPress install and Stripe test key
+/.wp-integration/
+/.stripe-test-key

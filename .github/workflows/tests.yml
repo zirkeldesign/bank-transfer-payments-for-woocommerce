@@ -1,0 +1,142 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Pint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer format:test
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer phpstan
+
+  tests:
+    name: Pest (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The plugin's floor is 8.3 (composer platform pin), so test it there
+        # too — an 8.4-only matrix would not catch a syntax or stdlib feature
+        # that the declared minimum cannot run.
+        php: ['8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer test
+
+  translations:
+    name: Translations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      # No composer install: the check only parses languages/*.po.
+      - run: composer translate:check
+
+  browser:
+    name: Browser (checkout e2e)
+    runs-on: ubuntu-latest
+    # The suite hangs rather than failing fast when the checkout renders no
+    # payment method, so cap it instead of letting it burn a full CI hour.
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite
+          coverage: none
+          tools: composer, wp-cli
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: composer install --no-interaction --prefer-dist
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install chromium --with-deps
+      # Provisions a SQLite-backed WordPress with WooCommerce, switches the
+      # gateway on and publishes a product. Without a Stripe key the test that
+      # places a real order skips itself; the one that proves the gateway shows
+      # up in the block checkout still runs, and that is the path no PHP test
+      # in this repo reaches.
+      - run: composer test:integration:setup
+        env:
+          BTPW_STRIPE_TEST_KEY: ${{ secrets.BTPW_STRIPE_TEST_KEY }}
+      - run: composer test:e2e
+        env:
+          BTPW_STRIPE_TEST_KEY: ${{ secrets.BTPW_STRIPE_TEST_KEY }}
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-screenshots
+          path: tests/Browser/Screenshots/
+          if-no-files-found: ignore
+
+  plugin-check:
+    name: Plugin Check (WordPress.org)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite
+          coverage: none
+          tools: composer, wp-cli
+      - run: composer install --no-interaction --prefer-dist
+      - name: Install wp-cli dist-archive
+        # Two separate traps here, both of which killed the job before it ever
+        # reached the checker.
+        #
+        # setup-php puts a github-oauth token into the global Composer config and
+        # wp package install reuses it; Composer rejects it as containing invalid
+        # characters, and supplying the Actions token instead made no difference.
+        # dist-archive-command is public, so the fix is to authenticate not at all.
+        #
+        # The version is pinned because dev-main now requires wp-cli ^3, while
+        # setup-php ships 2.12 - and the 3.2.x tags want ^2.13, which does not
+        # exist yet either. v3.1.0 is the newest tag that runs on wp-cli 2.12, and
+        # pinning it also keeps the CI build byte-identical to the local one
+        # instead of tracking a moving branch.
+        env:
+          COMPOSER_AUTH: '{}'
+        run: |
+          composer global config --no-plugins --unset github-oauth.github.com 2>/dev/null || true
+          wp package install wp-cli/dist-archive-command:v3.1.0 --allow-root
+      # Runs the same checker WordPress.org's review bot runs, against the
+      # BUILT zip rather than the checkout, so .distignore and the Strauss
+      # scoping are covered too. Catches "Tested up to" drift on every new
+      # WordPress release, which is otherwise silent until the plugin drops
+      # out of wp.org search.
+      - run: composer pcp

@@ -1,30 +1,15 @@
 {
-  "name": "woocommerce-stripe-bank-transfers",
+  "name": "bank-transfer-payments-for-woocommerce",
   "version": "1.0.0",
-  "description": "WooCommerce payment gateway for Stripe bank transfers",
-  "type": "module",
+  "private": true,
+  "description": "Accept reconciled bank transfer payments in WooCommerce via Stripe.",
   "scripts": {
-    "dev": "bun run build --watch",
-    "build": "bun run build:admin && bun run build:frontend",
-    "build:admin": "echo 'Build admin assets here'",
-    "build:frontend": "echo 'Build frontend assets here'",
-    "format": "prettier --write \"assets/**/*.{js,ts,css,scss}\"",
-    "lint": "eslint assets/**/*.{js,ts}",
-    "translate": "bun translate:pot && bun translate:update",
-    "translate:pot": "wp i18n make-pot . ./languages/wc-stripe-bank-transfers.pot --include='includes' --exclude='node_modules,vendor,tests' --domain='wc-stripe-bank-transfers'",
-    "translate:update": "for file in ./languages/*.po; do wp i18n update-po ./languages/wc-stripe-bank-transfers.pot $file; done",
-    "translate:compile": "bun translate:mo && bun translate:js",
-    "translate:js": "wp i18n make-json ./languages --pretty-print --no-purge",
+    "translate": "bun run translate:pot && bun run translate:update && bun run translate:mo",
+    "translate:pot": "wp i18n make-pot . ./languages/bank-transfer-payments-for-woocommerce.pot --slug=bank-transfer-payments-for-woocommerce --domain=bank-transfer-payments-for-woocommerce --include='bank-transfer-payments-for-woocommerce.php,src,templates' --exclude='node_modules,vendor,tests,dist,assets'",
+    "translate:update": "for file in ./languages/*.po; do wp i18n update-po ./languages/bank-transfer-payments-for-woocommerce.pot \"$file\"; done",
     "translate:mo": "wp i18n make-mo ./languages ./languages"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "prettier": "^3.0.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "playwright": "^1.63.0"
   }
 }
