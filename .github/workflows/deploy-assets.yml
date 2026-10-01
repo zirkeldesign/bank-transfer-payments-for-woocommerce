@@ -36,6 +36,15 @@ jobs:
         run: |
           set -euo pipefail
 
+          # The SVN path only exists once the plugin has been approved on
+          # WordPress.org. Until then this job would fail on every push that
+          # touches the art, which trains everyone to ignore a red run. Skip
+          # quietly instead, and start working by itself on approval.
+          if ! svn info "https://plugins.svn.wordpress.org/${SLUG}/assets" >/dev/null 2>&1; then
+            echo "::notice::${SLUG} is not on WordPress.org yet - nothing to sync."
+            exit 0
+          fi
+
           svn checkout "https://plugins.svn.wordpress.org/${SLUG}/assets" svn-assets
 
           # Guard against the nested-assets shape a misconfigured plugin-deploy
