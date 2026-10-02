@@ -14,7 +14,6 @@ use WP_Error;
 use ZirkelDesign\BankTransfersForWooCommerce\Payment\GiroCode;
 use ZirkelDesign\BankTransfersForWooCommerce\Stripe\ClientFactory;
 use ZirkelDesign\BankTransfersForWooCommerce\Stripe\PluginIntegration;
-use ZirkelDesign\BankTransfersForWooCommerce\Subscriptions\SubscriptionSupport;
 use ZirkelDesign\BankTransfersForWooCommerce\Support\Features;
 
 if (! defined('ABSPATH')) {
@@ -60,8 +59,6 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
     public bool $debug_mode = false;
 
-    public bool $enable_subscriptions = false;
-
     public string $order_status_awaiting = 'awaiting-transfer';
 
     public string $secret_key = '';
@@ -94,7 +91,6 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $this->transfer_type = self::normaliseTransferType((string) $this->get_option('transfer_type', 'eu_bank_transfer'));
         $this->default_currency = (string) $this->get_option('default_currency', 'eur');
         $this->debug_mode = $this->get_option('debug_mode') === 'yes';
-        $this->enable_subscriptions = $this->get_option('enable_subscriptions') === 'yes';
         $this->order_status_awaiting = (string) $this->get_option('order_status_awaiting', 'awaiting-transfer');
 
         $this->secret_key = $this->resolve_secret_key();
@@ -103,12 +99,18 @@ final class BankTransferGateway extends WC_Payment_Gateway
             $this->stripe = ClientFactory::make($this->secret_key);
         }
 
-        // Manual-renewal subscription support, opt-in and only when WooCommerce
-        // Subscriptions is active. Bank transfers cannot be auto-charged, so
-        // each renewal issues a fresh virtual account the customer pays.
-        if ($this->enable_subscriptions && class_exists('WC_Subscriptions') && Features::has(Features::SUBSCRIPTIONS)) {
-            SubscriptionSupport::attach($this);
-        }
+        /**
+         * Fires once the gateway is constructed and configured.
+         *
+         * The extension point for add-ons that need to attach to the gateway
+         * itself, for example to declare additional `supports` entries or hook
+         * payment callbacks. Add-ons own their own features entirely: nothing
+         * ships here that is switched off by a licence, which the WordPress.org
+         * guidelines on artificial limitations do not permit.
+         *
+         * @param  self  $gateway
+         */
+        do_action('btpw_gateway_initialised', $this);
 
         add_action('woocommerce_update_options_payment_gateways_'.$this->id, function (): void {
             $this->process_admin_options();
@@ -283,14 +285,6 @@ final class BankTransferGateway extends WC_Payment_Gateway
                 'description' => __('Log events to WooCommerce logs for debugging.', 'bank-transfer-payments-for-woocommerce'),
                 'default' => 'no',
                 'desc_tip' => true,
-            ],
-            'enable_subscriptions' => [
-                'title' => __('Subscriptions', 'bank-transfer-payments-for-woocommerce'),
-                'label' => __('Allow bank transfer for subscriptions (manual renewals)', 'bank-transfer-payments-for-woocommerce'),
-                'type' => 'checkbox',
-                'description' => Features::upsell(__('Requires the WooCommerce Subscriptions extension. Bank transfers cannot be charged automatically, so each renewal issues a new virtual bank account that the customer pays manually.', 'bank-transfer-payments-for-woocommerce')),
-                'default' => 'no',
-                'desc_tip' => false,
             ],
         ];
     }

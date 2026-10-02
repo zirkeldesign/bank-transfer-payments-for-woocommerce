@@ -3,31 +3,6 @@
 declare(strict_types=1);
 
 use ZirkelDesign\BankTransfersForWooCommerce\Gateway\BankTransferGateway;
-use ZirkelDesign\BankTransfersForWooCommerce\Support\Features;
-
-describe('Features capability gate', function (): void {
-    it('always enables free-core features', function (): void {
-        expect(Features::has(Features::GATEWAY))->toBeTrue()
-            ->and(Features::has(Features::RECONCILIATION))->toBeTrue()
-            ->and(Features::has(Features::GIROCODE))->toBeTrue()
-            ->and(Features::has(Features::REFUNDS))->toBeTrue();
-    });
-
-    it('disables Pro features without the add-on', function (): void {
-        expect(Features::has(Features::SUBSCRIPTIONS))->toBeFalse()
-            ->and(Features::has(Features::DUNNING))->toBeFalse()
-            ->and(Features::has(Features::RECONCILIATION_DASHBOARD))->toBeFalse()
-            ->and(Features::has(Features::EXPORT))->toBeFalse();
-    });
-
-    it('reports Pro as inactive by default', function (): void {
-        expect(Features::isProActive())->toBeFalse();
-    });
-
-    it('exposes a filterable upgrade URL', function (): void {
-        expect(Features::upgradeUrl())->toContain('http');
-    });
-});
 
 describe('BankTransferGateway::process_refund', function (): void {
     it('declares refund support', function (): void {
