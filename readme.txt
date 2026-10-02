@@ -33,6 +33,22 @@ Built DACH-first: SEPA / EUR is the default, with a German (Sie and Du) interfac
 
 This plugin requires a Stripe account and the WooCommerce plugin. Stripe is a third-party payment service; by using this plugin payment data is transmitted to Stripe (see the Stripe [Privacy Policy](https://stripe.com/privacy) and [Terms](https://stripe.com/legal)).
 
+== External services ==
+
+This plugin connects to the Stripe API to create a payment intent and a virtual bank account for an order, and to receive confirmation when the transfer arrives. Without that connection the plugin cannot do its job, so the service is required rather than optional.
+
+**Service:** Stripe (Stripe, Inc. / Stripe Payments Europe, Ltd.)
+
+**When data is sent:** when a customer places an order and chooses this payment method, when an order is refunded, and when the shop owner opens the customer balance panel in the admin.
+
+**What is sent:** the order number, order total and currency, the shop name, the billing country, and the customer's name and email address. The name and email are used to create a Stripe customer, which the bank-transfer flow requires because the virtual account belongs to that customer record.
+
+**What is received:** the virtual bank account details (IBAN/BIC or the equivalent for other rails) that are shown to the customer, and webhook notifications about the payment status.
+
+No data is sent to Stripe until the customer actively selects this payment method. This plugin sends nothing to any other third party, and it does not load any script or font from a remote host.
+
+Stripe [Terms of Service](https://stripe.com/legal) · Stripe [Privacy Policy](https://stripe.com/privacy) · Stripe [Data Processing Agreement](https://stripe.com/legal/dpa)
+
 == Installation ==
 
 1. Upload the plugin to `/wp-content/plugins/` and activate it.
