@@ -25,7 +25,9 @@
                     'X-WP-Nonce': btpwAdmin.nonce
                 },
                 body: JSON.stringify({
-                    customer_id: button.dataset.customerId,
+                    // The customer id is deliberately NOT sent: the server
+                    // resolves it from the user, so a request cannot address
+                    // someone else's Stripe customer.
                     user_id: button.dataset.userId
                 })
             })

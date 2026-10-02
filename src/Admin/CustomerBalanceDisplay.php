@@ -57,11 +57,18 @@ final class CustomerBalanceDisplay
             'methods' => 'POST',
             'callback' => [$this, 'create_financial_address'],
             'permission_callback' => static function (WP_REST_Request $request): bool {
-                return current_user_can('edit_user', absint($request->get_param('user_id')));
+                $userId = absint($request->get_param('user_id'));
+
+                // edit_user on your OWN id is true for every logged-in user, so
+                // that check alone lets any subscriber through. Issuing a bank
+                // account against the shop's Stripe account is shop-management
+                // work, so require that capability as well.
+                return $userId > 0
+                    && current_user_can('manage_woocommerce')
+                    && current_user_can('edit_user', $userId);
             },
             'args' => [
                 'user_id' => ['required' => true, 'type' => 'integer'],
-                'customer_id' => ['required' => true, 'type' => 'string'],
             ],
         ]);
     }
@@ -442,10 +449,16 @@ final class CustomerBalanceDisplay
      */
     public function create_financial_address(WP_REST_Request $request): WP_REST_Response
     {
-        $customerId = sanitize_text_field((string) $request->get_param('customer_id'));
+        $userId = absint($request->get_param('user_id'));
+
+        // Resolved from the user rather than accepted from the request. Taking
+        // it from the caller meant any id could be passed, so a request could
+        // address a Stripe customer belonging to someone else entirely; the
+        // capability check above says who may act, not on whose behalf.
+        $customerId = (string) get_user_meta($userId, '_stripe_customer_id', true);
 
         if ($customerId === '') {
-            return new WP_REST_Response(['message' => __('Customer ID is required', 'bank-transfer-payments-for-woocommerce')], 400);
+            return new WP_REST_Response(['message' => __('This user has no Stripe customer yet.', 'bank-transfer-payments-for-woocommerce')], 404);
         }
 
         if (! $this->init_stripe() || $this->stripe === null || $this->gateway === null) {
@@ -469,7 +482,17 @@ final class CustomerBalanceDisplay
                 'funding_instructions' => $response->id ?? null,
             ], 201);
         } catch (Throwable $e) {
-            return new WP_REST_Response(['message' => $e->getMessage()], 502);
+            // Stripe's own message is not returned: it distinguishes "no such
+            // customer" from other failures, which turns this endpoint into a
+            // way of testing whether a customer id exists. Log it, answer flat.
+            if (function_exists('wc_get_logger')) {
+                wc_get_logger()->error(
+                    'Funding instructions failed: '.$e->getMessage(),
+                    ['source' => 'bank-transfer-payments-for-woocommerce']
+                );
+            }
+
+            return new WP_REST_Response(['message' => __('Could not create the virtual bank account. See the WooCommerce logs for details.', 'bank-transfer-payments-for-woocommerce')], 502);
         }
     }
 
