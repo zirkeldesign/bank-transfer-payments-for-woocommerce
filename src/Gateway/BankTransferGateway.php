@@ -14,7 +14,6 @@ use WP_Error;
 use ZirkelDesign\BankTransfersForWooCommerce\Payment\GiroCode;
 use ZirkelDesign\BankTransfersForWooCommerce\Stripe\ClientFactory;
 use ZirkelDesign\BankTransfersForWooCommerce\Stripe\PluginIntegration;
-use ZirkelDesign\BankTransfersForWooCommerce\Support\Features;
 
 if (! defined('ABSPATH')) {
     exit;
