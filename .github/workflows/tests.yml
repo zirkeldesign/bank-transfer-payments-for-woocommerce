@@ -171,6 +171,10 @@ jobs:
           COMPOSER_AUTH: '{}'
         run: |
           composer global config --no-plugins --unset github-oauth.github.com 2>/dev/null || true
+          # Without a token Composer falls back to cloning over SSH, and the
+          # runner has no key for that: "git@github.com: Permission denied".
+          # The package is public, so force plain HTTPS instead.
+          composer global config --no-plugins github-protocols https 2>/dev/null || true
           # wp package install git-clones from GitHub with a 10s timeout, which
           # is short enough that an ordinary blip fails the whole job. Retry
           # before giving up: the failure mode here is transient, not a
