@@ -78,12 +78,31 @@ jobs:
           extensions: pdo_sqlite
           coverage: none
           tools: composer, wp-cli
+        env:
+          # setup-php resolves the wp-cli release over the GitHub API, and the
+          # anonymous rate limit on shared runners is what makes that fail.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: composer install --no-interaction --prefer-dist
       - run: npm install --no-audit --no-fund
       - run: npx playwright install chromium --with-deps
+      - name: Ensure wp-cli is present
+        # setup-php prints "Could not setup wp-cli" and carries on, so a failed
+        # tool install surfaces much later as a bare "wp: command not found".
+        # wp-cli is a single phar, so fetching it directly is both the check and
+        # the fix.
+        run: |
+          if command -v wp >/dev/null 2>&1; then
+            echo "wp-cli present: $(wp --version --allow-root)"
+            exit 0
+          fi
+          echo "::warning::setup-php did not provide wp-cli; installing the phar directly."
+          curl -fsSL -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x /tmp/wp-cli.phar
+          sudo mv /tmp/wp-cli.phar /usr/local/bin/wp
+          wp --version --allow-root
       # Provisions a SQLite-backed WordPress with WooCommerce, switches the
       # gateway on and publishes a product. Without a Stripe key the test that
       # places a real order skips itself; the one that proves the gateway shows
@@ -114,7 +133,26 @@ jobs:
           extensions: pdo_sqlite
           coverage: none
           tools: composer, wp-cli
+        env:
+          # setup-php resolves the wp-cli release over the GitHub API, and the
+          # anonymous rate limit on shared runners is what makes that fail.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: composer install --no-interaction --prefer-dist
+      - name: Ensure wp-cli is present
+        # setup-php prints "Could not setup wp-cli" and carries on, so a failed
+        # tool install surfaces much later as a bare "wp: command not found".
+        # wp-cli is a single phar, so fetching it directly is both the check and
+        # the fix.
+        run: |
+          if command -v wp >/dev/null 2>&1; then
+            echo "wp-cli present: $(wp --version --allow-root)"
+            exit 0
+          fi
+          echo "::warning::setup-php did not provide wp-cli; installing the phar directly."
+          curl -fsSL -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x /tmp/wp-cli.phar
+          sudo mv /tmp/wp-cli.phar /usr/local/bin/wp
+          wp --version --allow-root
       - name: Install wp-cli dist-archive
         # Two separate traps here, both of which killed the job before it ever
         # reached the checker.
