@@ -60,6 +60,13 @@ curl -sL https://downloads.wordpress.org/plugin/plugin-check.zip -o "/tmp/pcp-pc
 unzip -q -o "/tmp/pcp-pc.$$.zip" -d "$WPDIR/wp-content/plugins/"
 wp plugin activate plugin-check --path="$WPDIR" >/dev/null 2>&1
 
+# Deliberately no --categories: an empty category list means ALL of them
+# (general, plugin_repo, security, performance, accessibility), which is what
+# the admin UI runs with every box ticked. Pinning an explicit list here would
+# silently narrow the gate the day the checker gains a category, so leave it
+# off. The only thing the UI can do that this cannot is the optional AI
+# analysis, which needs a configured model; the AI_Provider_Check that scans for
+# third-party AI integrations is a stable check and runs here either way.
 echo "🔎 Running Plugin Check on ${SLUG} ${VERSION} against WordPress ${WP_VERSION} ..."
 RESULT="$(wp plugin check "$SLUG" --path="$WPDIR" --format=json 2>/dev/null || true)"
 
