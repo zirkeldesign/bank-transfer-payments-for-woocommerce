@@ -171,7 +171,19 @@ jobs:
           COMPOSER_AUTH: '{}'
         run: |
           composer global config --no-plugins --unset github-oauth.github.com 2>/dev/null || true
-          wp package install wp-cli/dist-archive-command:v3.1.0 --allow-root
+          # wp package install git-clones from GitHub with a 10s timeout, which
+          # is short enough that an ordinary blip fails the whole job. Retry
+          # before giving up: the failure mode here is transient, not a
+          # misconfiguration.
+          for attempt in 1 2 3; do
+            if wp package install wp-cli/dist-archive-command:v3.1.0 --allow-root; then
+              exit 0
+            fi
+            echo "::warning::dist-archive install failed (attempt ${attempt}/3); retrying in $((attempt * 10))s."
+            sleep $((attempt * 10))
+          done
+          echo "::error::Could not install wp-cli/dist-archive-command after 3 attempts."
+          exit 1
       # Runs the same checker WordPress.org's review bot runs, against the
       # BUILT zip rather than the checkout, so .distignore and the Strauss
       # scoping are covered too. Catches "Tested up to" drift on every new
