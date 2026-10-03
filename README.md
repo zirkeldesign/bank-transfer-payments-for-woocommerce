@@ -1,4 +1,4 @@
-# Bank Transfer Payments for WooCommerce
+# Zirkel Virtual IBAN for WooCommerce
 
 Accept **reconciled** bank transfer payments in WooCommerce via Stripe. Each order
 receives its own unique virtual bank account (SEPA IBAN, UK Bacs, US ACH, Mexican

@@ -174,7 +174,7 @@ final class PluginIntegration
 
         $message = sprintf(
             /* translators: %s: Detected Stripe plugin name. */
-            esc_html__('Detected %s plugin. Using Stripe credentials from that plugin.', 'bank-transfer-payments-for-woocommerce'),
+            esc_html__('Detected %s plugin. Using Stripe credentials from that plugin.', 'zirkel-iban-for-woocommerce'),
             '<strong>'.esc_html($adapter->label()).'</strong>'
         );
 

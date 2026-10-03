@@ -17,7 +17,7 @@ if (! defined('BTPW_VERSION')) {
     define('BTPW_VERSION', 'test');
 }
 if (! defined('BTPW_URL')) {
-    define('BTPW_URL', 'https://example.test/wp-content/plugins/bank-transfer-payments-for-woocommerce/');
+    define('BTPW_URL', 'https://example.test/wp-content/plugins/zirkel-iban-for-woocommerce/');
 }
 
 /**

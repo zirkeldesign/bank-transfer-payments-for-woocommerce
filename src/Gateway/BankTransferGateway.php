@@ -75,8 +75,8 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $this->icon = '';
         $this->has_fields = true;
         $this->supports = ['products', 'refunds'];
-        $this->method_title = __('Bank Transfer Payments', 'bank-transfer-payments-for-woocommerce');
-        $this->method_description = __('Accept bank transfer payments via Stripe. Customers receive individual bank account details for each order.', 'bank-transfer-payments-for-woocommerce');
+        $this->method_title = __('Bank Transfer Payments', 'zirkel-iban-for-woocommerce');
+        $this->method_description = __('Accept bank transfer payments via Stripe. Customers receive individual bank account details for each order.', 'zirkel-iban-for-woocommerce');
 
         $this->init_form_fields();
         $this->init_settings();
@@ -184,104 +184,104 @@ final class BankTransferGateway extends WC_Payment_Gateway
     {
         $this->form_fields = [
             'enabled' => [
-                'title' => __('Enable/Disable', 'bank-transfer-payments-for-woocommerce'),
-                'label' => __('Enable Bank Transfer Payments', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Enable/Disable', 'zirkel-iban-for-woocommerce'),
+                'label' => __('Enable Bank Transfer Payments', 'zirkel-iban-for-woocommerce'),
                 'type' => 'checkbox',
                 'description' => '',
                 'default' => 'no',
             ],
             'title' => [
-                'title' => __('Title', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Title', 'zirkel-iban-for-woocommerce'),
                 'type' => 'text',
-                'description' => __('This controls the title which the user sees during checkout.', 'bank-transfer-payments-for-woocommerce'),
-                'default' => __('Bank Transfer', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('This controls the title which the user sees during checkout.', 'zirkel-iban-for-woocommerce'),
+                'default' => __('Bank Transfer', 'zirkel-iban-for-woocommerce'),
                 'desc_tip' => true,
             ],
             'description' => [
-                'title' => __('Description', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Description', 'zirkel-iban-for-woocommerce'),
                 'type' => 'textarea',
-                'description' => __('Payment method description that the customer will see on your checkout.', 'bank-transfer-payments-for-woocommerce'),
-                'default' => __('Pay securely using bank transfer. You will receive unique bank account details after placing your order.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Payment method description that the customer will see on your checkout.', 'zirkel-iban-for-woocommerce'),
+                'default' => __('Pay securely using bank transfer. You will receive unique bank account details after placing your order.', 'zirkel-iban-for-woocommerce'),
                 'desc_tip' => true,
             ],
             'testmode' => [
-                'title' => __('Test mode', 'bank-transfer-payments-for-woocommerce'),
-                'label' => __('Enable Test Mode', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Test mode', 'zirkel-iban-for-woocommerce'),
+                'label' => __('Enable Test Mode', 'zirkel-iban-for-woocommerce'),
                 'type' => 'checkbox',
-                'description' => __('Place the payment gateway in test mode using test API keys.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Place the payment gateway in test mode using test API keys.', 'zirkel-iban-for-woocommerce'),
                 'default' => 'yes',
                 'desc_tip' => true,
             ],
             'test_secret_key' => [
-                'title' => __('Test Secret Key', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Test Secret Key', 'zirkel-iban-for-woocommerce'),
                 'type' => 'password',
-                'description' => __('Get your API keys from your Stripe account.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Get your API keys from your Stripe account.', 'zirkel-iban-for-woocommerce'),
                 'default' => '',
                 'desc_tip' => true,
             ],
             'live_secret_key' => [
-                'title' => __('Live Secret Key', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Live Secret Key', 'zirkel-iban-for-woocommerce'),
                 'type' => 'password',
-                'description' => __('Get your API keys from your Stripe account.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Get your API keys from your Stripe account.', 'zirkel-iban-for-woocommerce'),
                 'default' => '',
                 'desc_tip' => true,
             ],
             'webhook_secret' => [
-                'title' => __('Webhook Secret', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Webhook Secret', 'zirkel-iban-for-woocommerce'),
                 'type' => 'password',
                 'description' => sprintf(
                     /* translators: %s: Webhook URL */
-                    __('Enter your webhook signing secret from the Stripe Dashboard. Webhook URL: %s', 'bank-transfer-payments-for-woocommerce'),
-                    '<code>'.esc_url(rest_url('bank-transfer-payments-for-woocommerce/v1/webhook')).'</code>'
+                    __('Enter your webhook signing secret from the Stripe Dashboard. Webhook URL: %s', 'zirkel-iban-for-woocommerce'),
+                    '<code>'.esc_url(rest_url('zirkel-iban-for-woocommerce/v1/webhook')).'</code>'
                 ),
                 'default' => '',
                 'desc_tip' => false,
             ],
             'transfer_type' => [
-                'title' => __('Bank Transfer Type', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Bank Transfer Type', 'zirkel-iban-for-woocommerce'),
                 'type' => 'select',
-                'description' => __('Select the type of bank transfer to accept.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Select the type of bank transfer to accept.', 'zirkel-iban-for-woocommerce'),
                 'default' => 'eu_bank_transfer',
                 'desc_tip' => true,
                 'options' => [
-                    'eu_bank_transfer' => __('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce'),
-                    'gb_bank_transfer' => __('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce'),
-                    'us_bank_transfer' => __('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce'),
-                    'jp_bank_transfer' => __('Japanese Bank Account', 'bank-transfer-payments-for-woocommerce'),
-                    'mx_bank_transfer' => __('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce'),
+                    'eu_bank_transfer' => __('EU Bank Account (SEPA)', 'zirkel-iban-for-woocommerce'),
+                    'gb_bank_transfer' => __('UK Bank Account (Bacs)', 'zirkel-iban-for-woocommerce'),
+                    'us_bank_transfer' => __('US Bank Account (ACH)', 'zirkel-iban-for-woocommerce'),
+                    'jp_bank_transfer' => __('Japanese Bank Account', 'zirkel-iban-for-woocommerce'),
+                    'mx_bank_transfer' => __('Mexican Bank Account (SPEI)', 'zirkel-iban-for-woocommerce'),
                 ],
             ],
             'default_currency' => [
-                'title' => __('Default Currency for Virtual Bank Accounts', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Default Currency for Virtual Bank Accounts', 'zirkel-iban-for-woocommerce'),
                 'type' => 'select',
-                'description' => __('Currency used when creating virtual bank account details for customers.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Currency used when creating virtual bank account details for customers.', 'zirkel-iban-for-woocommerce'),
                 'default' => 'eur',
                 'desc_tip' => true,
                 'options' => [
-                    'usd' => __('US Dollar (USD)', 'bank-transfer-payments-for-woocommerce'),
-                    'eur' => __('Euro (EUR)', 'bank-transfer-payments-for-woocommerce'),
-                    'gbp' => __('British Pound (GBP)', 'bank-transfer-payments-for-woocommerce'),
-                    'jpy' => __('Japanese Yen (JPY)', 'bank-transfer-payments-for-woocommerce'),
-                    'mxn' => __('Mexican Peso (MXN)', 'bank-transfer-payments-for-woocommerce'),
+                    'usd' => __('US Dollar (USD)', 'zirkel-iban-for-woocommerce'),
+                    'eur' => __('Euro (EUR)', 'zirkel-iban-for-woocommerce'),
+                    'gbp' => __('British Pound (GBP)', 'zirkel-iban-for-woocommerce'),
+                    'jpy' => __('Japanese Yen (JPY)', 'zirkel-iban-for-woocommerce'),
+                    'mxn' => __('Mexican Peso (MXN)', 'zirkel-iban-for-woocommerce'),
                 ],
             ],
             'order_status_awaiting' => [
-                'title' => __('Awaiting-payment order status', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Awaiting-payment order status', 'zirkel-iban-for-woocommerce'),
                 'type' => 'select',
-                'description' => __('Status to set on the order while waiting for the customer to complete the bank transfer.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Status to set on the order while waiting for the customer to complete the bank transfer.', 'zirkel-iban-for-woocommerce'),
                 'default' => 'awaiting-transfer',
                 'desc_tip' => true,
                 'options' => [
-                    'awaiting-transfer' => __('Awaiting Bank Transfer', 'bank-transfer-payments-for-woocommerce'),
-                    'on-hold' => __('On hold', 'bank-transfer-payments-for-woocommerce'),
-                    'pending' => __('Pending payment', 'bank-transfer-payments-for-woocommerce'),
+                    'awaiting-transfer' => __('Awaiting Bank Transfer', 'zirkel-iban-for-woocommerce'),
+                    'on-hold' => __('On hold', 'zirkel-iban-for-woocommerce'),
+                    'pending' => __('Pending payment', 'zirkel-iban-for-woocommerce'),
                 ],
             ],
             'debug_mode' => [
-                'title' => __('Debug Mode', 'bank-transfer-payments-for-woocommerce'),
-                'label' => __('Enable logging', 'bank-transfer-payments-for-woocommerce'),
+                'title' => __('Debug Mode', 'zirkel-iban-for-woocommerce'),
+                'label' => __('Enable logging', 'zirkel-iban-for-woocommerce'),
                 'type' => 'checkbox',
-                'description' => __('Log events to WooCommerce logs for debugging.', 'bank-transfer-payments-for-woocommerce'),
+                'description' => __('Log events to WooCommerce logs for debugging.', 'zirkel-iban-for-woocommerce'),
                 'default' => 'no',
                 'desc_tip' => true,
             ],
@@ -332,7 +332,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
         }
 
         echo '<div class="btpw-bank-transfer-info">';
-        echo '<p>'.esc_html__('After placing your order, you will receive unique bank account details to complete your payment.', 'bank-transfer-payments-for-woocommerce').'</p>';
+        echo '<p>'.esc_html__('After placing your order, you will receive unique bank account details to complete your payment.', 'zirkel-iban-for-woocommerce').'</p>';
         echo '</div>';
     }
 
@@ -388,7 +388,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
             'confirm' => true,
             'metadata' => $metadata,
             /* translators: 1: Order number, 2: Site name */
-            'description' => sprintf(__('Order %1$s from %2$s', 'bank-transfer-payments-for-woocommerce'), $order->get_order_number(), get_bloginfo('name')),
+            'description' => sprintf(__('Order %1$s from %2$s', 'zirkel-iban-for-woocommerce'), $order->get_order_number(), get_bloginfo('name')),
         ];
 
         // A cash balance belongs to a Stripe customer, so customer_balance
@@ -554,7 +554,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
          */
         $orderStatus = apply_filters('btpw_order_status', 'wc-'.$this->order_status_awaiting, $order, $paymentIntent);
 
-        $order->update_status($orderStatus, __('Awaiting bank transfer payment.', 'bank-transfer-payments-for-woocommerce'));
+        $order->update_status($orderStatus, __('Awaiting bank transfer payment.', 'zirkel-iban-for-woocommerce'));
 
         return $paymentIntent;
     }
@@ -569,13 +569,13 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $order = wc_get_order($order_id);
 
         if (! $order instanceof WC_Order) {
-            wc_add_notice(__('Order could not be loaded. Please try again.', 'bank-transfer-payments-for-woocommerce'), 'error');
+            wc_add_notice(__('Order could not be loaded. Please try again.', 'zirkel-iban-for-woocommerce'), 'error');
 
             return ['result' => 'fail'];
         }
 
         if ($this->stripe === null) {
-            wc_add_notice(__('Payment gateway configuration error. Please contact support.', 'bank-transfer-payments-for-woocommerce'), 'error');
+            wc_add_notice(__('Payment gateway configuration error. Please contact support.', 'zirkel-iban-for-woocommerce'), 'error');
 
             return ['result' => 'fail'];
         }
@@ -606,12 +606,12 @@ final class BankTransferGateway extends WC_Payment_Gateway
             ];
         } catch (ApiErrorException $e) {
             $this->log('Stripe API Error: '.$e->getMessage(), 'error');
-            wc_add_notice(__('Payment failed. Please try again or contact us.', 'bank-transfer-payments-for-woocommerce'), 'error');
+            wc_add_notice(__('Payment failed. Please try again or contact us.', 'zirkel-iban-for-woocommerce'), 'error');
 
             return ['result' => 'fail'];
         } catch (Throwable $e) {
             $this->log('Error processing payment: '.$e->getMessage(), 'error');
-            wc_add_notice(__('An error occurred while processing your payment. Please try again.', 'bank-transfer-payments-for-woocommerce'), 'error');
+            wc_add_notice(__('An error occurred while processing your payment. Please try again.', 'zirkel-iban-for-woocommerce'), 'error');
 
             return ['result' => 'fail'];
         }
@@ -633,17 +633,17 @@ final class BankTransferGateway extends WC_Payment_Gateway
         $order = wc_get_order($order_id);
 
         if (! $order instanceof WC_Order) {
-            return new WP_Error('btpw_refund_error', __('Order could not be loaded.', 'bank-transfer-payments-for-woocommerce'));
+            return new WP_Error('btpw_refund_error', __('Order could not be loaded.', 'zirkel-iban-for-woocommerce'));
         }
 
         if ($this->stripe === null) {
-            return new WP_Error('btpw_refund_error', __('Stripe is not configured.', 'bank-transfer-payments-for-woocommerce'));
+            return new WP_Error('btpw_refund_error', __('Stripe is not configured.', 'zirkel-iban-for-woocommerce'));
         }
 
         $paymentIntentId = (string) $order->get_meta('_stripe_payment_intent_id');
 
         if ($paymentIntentId === '') {
-            return new WP_Error('btpw_refund_error', __('No Stripe payment found for this order.', 'bank-transfer-payments-for-woocommerce'));
+            return new WP_Error('btpw_refund_error', __('No Stripe payment found for this order.', 'zirkel-iban-for-woocommerce'));
         }
 
         try {
@@ -663,8 +663,8 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
             $order->add_order_note(sprintf(
                 /* translators: 1: Refunded amount, 2: Stripe refund ID */
-                __('Refunded %1$s via Stripe bank transfer. Refund ID: %2$s', 'bank-transfer-payments-for-woocommerce'),
-                $amount !== null ? (string) $amount : __('full amount', 'bank-transfer-payments-for-woocommerce'),
+                __('Refunded %1$s via Stripe bank transfer. Refund ID: %2$s', 'zirkel-iban-for-woocommerce'),
+                $amount !== null ? (string) $amount : __('full amount', 'zirkel-iban-for-woocommerce'),
                 (string) ($refund->id ?? '')
             ));
 
@@ -708,8 +708,8 @@ final class BankTransferGateway extends WC_Payment_Gateway
         }
 
         echo '<section class="btpw-bank-transfer-details">';
-        echo '<h2>'.esc_html__('Bank Transfer Instructions', 'bank-transfer-payments-for-woocommerce').'</h2>';
-        echo '<p>'.esc_html__('Please transfer the funds to the following bank account:', 'bank-transfer-payments-for-woocommerce').'</p>';
+        echo '<h2>'.esc_html__('Bank Transfer Instructions', 'zirkel-iban-for-woocommerce').'</h2>';
+        echo '<p>'.esc_html__('Please transfer the funds to the following bank account:', 'zirkel-iban-for-woocommerce').'</p>';
 
         $sepaAddress = null;
 
@@ -746,15 +746,15 @@ final class BankTransferGateway extends WC_Payment_Gateway
         }
 
         echo '<div class="btpw-payment-details">';
-        echo '<p><strong>'.esc_html__('Amount:', 'bank-transfer-payments-for-woocommerce').'</strong> '.wp_kses_post(wc_price($order->get_total(), ['currency' => $order->get_currency()])).'</p>';
-        echo '<p><strong>'.esc_html__('Order Number:', 'bank-transfer-payments-for-woocommerce').'</strong> '.esc_html($order->get_order_number()).'</p>';
+        echo '<p><strong>'.esc_html__('Amount:', 'zirkel-iban-for-woocommerce').'</strong> '.wp_kses_post(wc_price($order->get_total(), ['currency' => $order->get_currency()])).'</p>';
+        echo '<p><strong>'.esc_html__('Order Number:', 'zirkel-iban-for-woocommerce').'</strong> '.esc_html($order->get_order_number()).'</p>';
 
         if (isset($bankDetails['hosted_instructions_url'])) {
-            echo '<p><a href="'.esc_url($bankDetails['hosted_instructions_url']).'" class="button" target="_blank" rel="noopener">'.esc_html__('View Full Instructions', 'bank-transfer-payments-for-woocommerce').'</a></p>';
+            echo '<p><a href="'.esc_url($bankDetails['hosted_instructions_url']).'" class="button" target="_blank" rel="noopener">'.esc_html__('View Full Instructions', 'zirkel-iban-for-woocommerce').'</a></p>';
         }
         echo '</div>';
 
-        echo '<p class="btpw-important-notice">'.esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce').'</p>';
+        echo '<p class="btpw-important-notice">'.esc_html__('Important: Please include your order number as the payment reference.', 'zirkel-iban-for-woocommerce').'</p>';
 
         if ($sepaAddress !== null) {
             echo '<p class="btpw-vop-notice">'.esc_html(self::vopNotice()).'</p>';
@@ -776,7 +776,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
     {
         return (string) apply_filters(
             'btpw_vop_notice',
-            __('Your bank checks the recipient name against the IBAN before releasing the transfer. Please enter the account holder name exactly as shown above. The payment is handled by our payment provider, so this name can differ from our shop name - that is normal.', 'bank-transfer-payments-for-woocommerce')
+            __('Your bank checks the recipient name against the IBAN before releasing the transfer. Please enter the account holder name exactly as shown above. The payment is handled by our payment provider, so this name can differ from our shop name - that is normal.', 'zirkel-iban-for-woocommerce')
         );
     }
 
@@ -786,12 +786,12 @@ final class BankTransferGateway extends WC_Payment_Gateway
     public static function financialAddressLabel(string $type): string
     {
         return match ($type) {
-            'iban' => __('EU Bank Account (SEPA)', 'bank-transfer-payments-for-woocommerce'),
-            'aba' => __('US Bank Account (ACH)', 'bank-transfer-payments-for-woocommerce'),
-            'sort_code' => __('UK Bank Account (Bacs)', 'bank-transfer-payments-for-woocommerce'),
-            'spei' => __('Mexican Bank Account (SPEI)', 'bank-transfer-payments-for-woocommerce'),
-            'zengin' => __('Japanese Bank Account', 'bank-transfer-payments-for-woocommerce'),
-            default => __('Bank Account', 'bank-transfer-payments-for-woocommerce'),
+            'iban' => __('EU Bank Account (SEPA)', 'zirkel-iban-for-woocommerce'),
+            'aba' => __('US Bank Account (ACH)', 'zirkel-iban-for-woocommerce'),
+            'sort_code' => __('UK Bank Account (Bacs)', 'zirkel-iban-for-woocommerce'),
+            'spei' => __('Mexican Bank Account (SPEI)', 'zirkel-iban-for-woocommerce'),
+            'zengin' => __('Japanese Bank Account', 'zirkel-iban-for-woocommerce'),
+            default => __('Bank Account', 'zirkel-iban-for-woocommerce'),
         };
     }
 
@@ -816,28 +816,28 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
         $rows = match ($type) {
             'iban' => [
-                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
-                __('IBAN:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['iban'] ?? ''),
-                __('BIC:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bic'] ?? ''),
+                __('Account Holder Name:', 'zirkel-iban-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
+                __('IBAN:', 'zirkel-iban-for-woocommerce') => (string) ($data['iban'] ?? ''),
+                __('BIC:', 'zirkel-iban-for-woocommerce') => (string) ($data['bic'] ?? ''),
             ],
             'aba' => [
-                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
-                __('Routing Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['routing_number'] ?? ''),
-                __('Bank Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
+                __('Account Number:', 'zirkel-iban-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Routing Number:', 'zirkel-iban-for-woocommerce') => (string) ($data['routing_number'] ?? ''),
+                __('Bank Name:', 'zirkel-iban-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
             ],
             'sort_code' => [
-                __('Account Holder Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
-                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
-                __('Sort Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['sort_code'] ?? ''),
+                __('Account Holder Name:', 'zirkel-iban-for-woocommerce') => (string) ($data['account_holder_name'] ?? ''),
+                __('Account Number:', 'zirkel-iban-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Sort Code:', 'zirkel-iban-for-woocommerce') => (string) ($data['sort_code'] ?? ''),
             ],
             'spei' => [
-                __('CLABE:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['clabe'] ?? ''),
-                __('Bank Name:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
+                __('CLABE:', 'zirkel-iban-for-woocommerce') => (string) ($data['clabe'] ?? ''),
+                __('Bank Name:', 'zirkel-iban-for-woocommerce') => (string) ($data['bank_name'] ?? ''),
             ],
             'zengin' => [
-                __('Account Number:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['account_number'] ?? ''),
-                __('Bank Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['bank_code'] ?? ''),
-                __('Branch Code:', 'bank-transfer-payments-for-woocommerce') => (string) ($data['branch_code'] ?? ''),
+                __('Account Number:', 'zirkel-iban-for-woocommerce') => (string) ($data['account_number'] ?? ''),
+                __('Bank Code:', 'zirkel-iban-for-woocommerce') => (string) ($data['bank_code'] ?? ''),
+                __('Branch Code:', 'zirkel-iban-for-woocommerce') => (string) ($data['branch_code'] ?? ''),
             ],
             default => [],
         };
@@ -883,7 +883,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
 
         // Base64 so newline separators survive HTML attribute normalisation.
         echo '<div class="btpw-girocode" data-girocode="'.esc_attr(base64_encode($payload)).'"></div>';
-        echo '<span class="btpw-girocode__hint">'.esc_html__('Scan this GiroCode with your banking app to pre-fill the transfer.', 'bank-transfer-payments-for-woocommerce').'</span>';
+        echo '<span class="btpw-girocode__hint">'.esc_html__('Scan this GiroCode with your banking app to pre-fill the transfer.', 'zirkel-iban-for-woocommerce').'</span>';
     }
 
     /**
@@ -929,8 +929,8 @@ final class BankTransferGateway extends WC_Payment_Gateway
             return;
         }
 
-        echo "\n".esc_html__('Bank Transfer Instructions', 'bank-transfer-payments-for-woocommerce')."\n";
-        echo esc_html__('Please transfer the funds to the following bank account:', 'bank-transfer-payments-for-woocommerce')."\n\n";
+        echo "\n".esc_html__('Bank Transfer Instructions', 'zirkel-iban-for-woocommerce')."\n";
+        echo esc_html__('Please transfer the funds to the following bank account:', 'zirkel-iban-for-woocommerce')."\n\n";
 
         $hasSepa = false;
 
@@ -956,7 +956,7 @@ final class BankTransferGateway extends WC_Payment_Gateway
             echo "\n";
         }
 
-        echo esc_html__('Important: Please include your order number as the payment reference.', 'bank-transfer-payments-for-woocommerce')."\n";
+        echo esc_html__('Important: Please include your order number as the payment reference.', 'zirkel-iban-for-woocommerce')."\n";
 
         if ($hasSepa) {
             echo esc_html(self::vopNotice())."\n";

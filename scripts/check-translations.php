@@ -21,8 +21,8 @@ $localeDir = $root.'/languages';
  * proper noun, and the URLs and author are the same in every locale.
  */
 $allowed = [
-    'Bank Transfer Payments for WooCommerce',
-    'https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce',
+    'Zirkel Virtual IBAN for WooCommerce',
+    'https://github.com/zirkeldesign/zirkel-iban-for-woocommerce',
     'zirkel.design',
     'https://zirkel.design',
 ];

@@ -1,5 +1,5 @@
 {
-    "name": "zirkeldesign/bank-transfer-payments-for-woocommerce",
+    "name": "zirkeldesign/zirkel-iban-for-woocommerce",
     "description": "Accept reconciled bank transfer payments in WooCommerce via Stripe, with per-order virtual bank accounts and automatic webhook reconciliation.",
     "license": "GPL-2.0-or-later",
     "type": "wordpress-plugin",
@@ -23,10 +23,10 @@
             "homepage": "https://zirkel.design"
         }
     ],
-    "homepage": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce",
+    "homepage": "https://github.com/zirkeldesign/zirkel-iban-for-woocommerce",
     "support": {
-        "issues": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce/issues",
-        "source": "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce"
+        "issues": "https://github.com/zirkeldesign/zirkel-iban-for-woocommerce/issues",
+        "source": "https://github.com/zirkeldesign/zirkel-iban-for-woocommerce"
     },
     "require": {
         "php": "^8.3",

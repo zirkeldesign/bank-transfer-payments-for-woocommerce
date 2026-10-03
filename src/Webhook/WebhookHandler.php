@@ -21,7 +21,7 @@ if (! defined('ABSPATH')) {
  */
 final class WebhookHandler
 {
-    public const ROUTE_NAMESPACE = 'bank-transfer-payments-for-woocommerce/v1';
+    public const ROUTE_NAMESPACE = 'zirkel-iban-for-woocommerce/v1';
 
     public function register_routes(): void
     {
@@ -129,7 +129,7 @@ final class WebhookHandler
         $order->payment_complete($paymentIntent['id'] ?? '');
         $order->add_order_note(sprintf(
             /* translators: %s: Payment Intent ID */
-            __('Stripe bank transfer payment completed. Payment Intent ID: %s', 'bank-transfer-payments-for-woocommerce'),
+            __('Stripe bank transfer payment completed. Payment Intent ID: %s', 'zirkel-iban-for-woocommerce'),
             $paymentIntent['id'] ?? ''
         ));
         $order->update_meta_data('_stripe_payment_intent_status', 'succeeded');
@@ -151,14 +151,14 @@ final class WebhookHandler
             return;
         }
 
-        $order->update_status('failed', __('Bank transfer payment failed.', 'bank-transfer-payments-for-woocommerce'));
+        $order->update_status('failed', __('Bank transfer payment failed.', 'zirkel-iban-for-woocommerce'));
 
         $failureMessage = $paymentIntent['last_payment_error']['message']
-            ?? __('Unknown error', 'bank-transfer-payments-for-woocommerce');
+            ?? __('Unknown error', 'zirkel-iban-for-woocommerce');
 
         $order->add_order_note(sprintf(
             /* translators: 1: Failure reason, 2: Payment Intent ID */
-            __('Stripe bank transfer payment failed. Reason: %1$s. Payment Intent ID: %2$s', 'bank-transfer-payments-for-woocommerce'),
+            __('Stripe bank transfer payment failed. Reason: %1$s. Payment Intent ID: %2$s', 'zirkel-iban-for-woocommerce'),
             $failureMessage,
             $paymentIntent['id'] ?? ''
         ));
@@ -181,10 +181,10 @@ final class WebhookHandler
             return;
         }
 
-        $order->update_status('cancelled', __('Bank transfer payment was cancelled.', 'bank-transfer-payments-for-woocommerce'));
+        $order->update_status('cancelled', __('Bank transfer payment was cancelled.', 'zirkel-iban-for-woocommerce'));
         $order->add_order_note(sprintf(
             /* translators: %s: Payment Intent ID */
-            __('Stripe bank transfer payment cancelled. Payment Intent ID: %s', 'bank-transfer-payments-for-woocommerce'),
+            __('Stripe bank transfer payment cancelled. Payment Intent ID: %s', 'zirkel-iban-for-woocommerce'),
             $paymentIntent['id'] ?? ''
         ));
         $order->update_meta_data('_stripe_payment_intent_status', 'canceled');
@@ -208,7 +208,7 @@ final class WebhookHandler
 
         $order->add_order_note(sprintf(
             /* translators: %s: Payment Intent ID */
-            __('Bank transfer payment is being processed by Stripe. Payment Intent ID: %s', 'bank-transfer-payments-for-woocommerce'),
+            __('Bank transfer payment is being processed by Stripe. Payment Intent ID: %s', 'zirkel-iban-for-woocommerce'),
             $paymentIntent['id'] ?? ''
         ));
         $order->update_meta_data('_stripe_payment_intent_status', 'processing');
@@ -235,7 +235,7 @@ final class WebhookHandler
                 '_stripe_bank_transfer_details',
                 wp_json_encode($paymentIntent['next_action']['display_bank_transfer_instructions'])
             );
-            $order->add_order_note(__('Bank transfer instructions have been updated.', 'bank-transfer-payments-for-woocommerce'));
+            $order->add_order_note(__('Bank transfer instructions have been updated.', 'zirkel-iban-for-woocommerce'));
             $order->save();
 
             $this->log('Bank transfer instructions updated for order #'.$order->get_id());
@@ -266,7 +266,7 @@ final class WebhookHandler
 
         $order->add_order_note(sprintf(
             /* translators: 1: Amount received, 2: Amount expected (both in the smallest currency unit). */
-            __('Partial bank transfer received: %1$s of %2$s (minor units). Awaiting the remaining amount.', 'bank-transfer-payments-for-woocommerce'),
+            __('Partial bank transfer received: %1$s of %2$s (minor units). Awaiting the remaining amount.', 'zirkel-iban-for-woocommerce'),
             (string) $received,
             (string) $expected
         ));

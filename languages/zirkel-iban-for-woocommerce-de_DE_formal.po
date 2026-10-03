@@ -1,33 +1,33 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Bank Transfer Payments for WooCommerce 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bank-transfer-payments-for-woocommerce\n"
+"Project-Id-Version: Zirkel Virtual IBAN for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/zirkel-iban-for-woocommerce\n"
 "Last-Translator: zirkel.design <hello@zirkel.design>\n"
-"Language-Team: Deutsch\n"
+"Language-Team: Deutsch (Sie)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-08-13T12:44:37+00:00\n"
 "PO-Revision-Date: 2026-08-13 13:00+0000\n"
-"Language: de_DE\n"
+"Language: de_DE_formal\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Domain: bank-transfer-payments-for-woocommerce\n"
+"X-Domain: zirkel-iban-for-woocommerce\n"
 
 #. Plugin Name of the plugin
-#: bank-transfer-payments-for-woocommerce.php
-msgid "Bank Transfer Payments for WooCommerce"
+#: zirkel-iban-for-woocommerce.php
+msgid "Zirkel Virtual IBAN for WooCommerce"
 msgstr ""
 
 #. Description of the plugin
-#: bank-transfer-payments-for-woocommerce.php
+#: zirkel-iban-for-woocommerce.php
 msgid "Accept reconciled bank transfer payments in WooCommerce via Stripe. Each order gets unique virtual bank account details (SEPA/ACH/Bacs/SPEI), and webhooks mark the order paid automatically."
 msgstr "Akzeptiert automatisch abgeglichene Zahlungen per Banküberweisung in WooCommerce über Stripe. Jede Bestellung erhält eigene virtuelle Bankverbindungsdaten (SEPA/ACH/Bacs/SPEI), und Webhooks markieren die Bestellung automatisch als bezahlt."
 
-#: bank-transfer-payments-for-woocommerce.php:64
-msgid "Bank Transfer Payments for WooCommerce requires WooCommerce to be installed and activated."
-msgstr "Bank Transfer Payments for WooCommerce erfordert, dass WooCommerce installiert und aktiviert ist."
+#: zirkel-iban-for-woocommerce.php:64
+msgid "Zirkel Virtual IBAN for WooCommerce requires WooCommerce to be installed and activated."
+msgstr "Zirkel Virtual IBAN for WooCommerce erfordert, dass WooCommerce installiert und aktiviert ist."
 
-#: bank-transfer-payments-for-woocommerce.php:88
+#: zirkel-iban-for-woocommerce.php:88
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -46,7 +46,7 @@ msgstr "Unbekannter Fehler"
 
 #: src/Admin/CustomerBalanceDisplay.php:100
 msgid "An error occurred. Please try again."
-msgstr "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
 
 #: src/Admin/CustomerBalanceDisplay.php:152
 msgid "Stripe Customer Balance"
@@ -261,7 +261,7 @@ msgstr "Beschreibung der Zahlungsart, die der Kunde beim Bezahlvorgang sieht."
 
 #: src/Gateway/BankTransferGateway.php:203
 msgid "Pay securely using bank transfer. You will receive unique bank account details after placing your order."
-msgstr "Zahle sicher per Banküberweisung. Nach dem Aufgeben deiner Bestellung erhältst du eindeutige Bankverbindungsdaten."
+msgstr "Zahlen Sie sicher per Banküberweisung. Nach dem Aufgeben Ihrer Bestellung erhalten Sie eindeutige Bankverbindungsdaten."
 
 #: src/Gateway/BankTransferGateway.php:207
 msgid "Test mode"
@@ -282,7 +282,7 @@ msgstr "Geheimer Test-Schlüssel"
 #: src/Gateway/BankTransferGateway.php:217
 #: src/Gateway/BankTransferGateway.php:224
 msgid "Get your API keys from your Stripe account."
-msgstr "Hol dir deine API-Schlüssel aus deinem Stripe-Konto."
+msgstr "Holen Sie sich Ihre API-Schlüssel aus Ihrem Stripe-Konto."
 
 #: src/Gateway/BankTransferGateway.php:222
 msgid "Live Secret Key"
@@ -296,7 +296,7 @@ msgstr "Webhook-Secret"
 #: src/Gateway/BankTransferGateway.php:233
 #, php-format
 msgid "Enter your webhook signing secret from the Stripe Dashboard. Webhook URL: %s"
-msgstr "Gib dein Webhook-Signing-Secret aus dem Stripe-Dashboard ein. Webhook-URL: %s"
+msgstr "Geben Sie Ihr Webhook-Signing-Secret aus dem Stripe-Dashboard ein. Webhook-URL: %s"
 
 #: src/Gateway/BankTransferGateway.php:240
 msgid "Bank Transfer Type"
@@ -304,7 +304,7 @@ msgstr "Art der Banküberweisung"
 
 #: src/Gateway/BankTransferGateway.php:242
 msgid "Select the type of bank transfer to accept."
-msgstr "Wähle die Art der Banküberweisung, die akzeptiert werden soll."
+msgstr "Wählen Sie die Art der Banküberweisung, die akzeptiert werden soll."
 
 #: src/Gateway/BankTransferGateway.php:246
 #: src/Gateway/BankTransferGateway.php:796
@@ -374,7 +374,7 @@ msgstr "Protokolliert Ereignisse zur Fehlersuche in den WooCommerce-Logs."
 #: src/Gateway/BankTransferGateway.php:342
 #: src/Gateway/BlocksSupport.php:71
 msgid "After placing your order, you will receive unique bank account details to complete your payment."
-msgstr "Nachdem du deine Bestellung aufgegeben hast, erhältst du eindeutige Bankverbindungsdaten, um deine Zahlung abzuschließen."
+msgstr "Nachdem Sie Ihre Bestellung aufgegeben haben, erhalten Sie eindeutige Bankverbindungsdaten, um Ihre Zahlung abzuschließen."
 
 #. translators: 1: Order number, 2: Site name
 #: src/Gateway/BankTransferGateway.php:398
@@ -384,11 +384,11 @@ msgstr "Bestellung %1$s von %2$s"
 
 #: src/Gateway/BankTransferGateway.php:579
 msgid "Order could not be loaded. Please try again."
-msgstr "Bestellung konnte nicht geladen werden. Bitte versuche es erneut."
+msgstr "Bestellung konnte nicht geladen werden. Bitte versuchen Sie es erneut."
 
 #: src/Gateway/BankTransferGateway.php:585
 msgid "Payment gateway configuration error. Please contact support."
-msgstr "Konfigurationsfehler des Zahlungs-Gateways. Bitte kontaktiere den Support."
+msgstr "Konfigurationsfehler des Zahlungs-Gateways. Bitte kontaktieren Sie den Support."
 
 #: src/Gateway/BankTransferGateway.php:564
 msgid "Awaiting bank transfer payment."
@@ -396,11 +396,11 @@ msgstr "Warten auf Zahlung per Banküberweisung."
 
 #: src/Gateway/BankTransferGateway.php:616
 msgid "Payment failed. Please try again or contact us."
-msgstr "Zahlung fehlgeschlagen. Bitte versuche es erneut oder kontaktiere uns."
+msgstr "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut oder kontaktieren Sie uns."
 
 #: src/Gateway/BankTransferGateway.php:621
 msgid "An error occurred while processing your payment. Please try again."
-msgstr "Bei der Verarbeitung deiner Zahlung ist ein Fehler aufgetreten. Bitte versuche es erneut."
+msgstr "Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
 
 #: src/Gateway/BankTransferGateway.php:718
 #: src/Gateway/BankTransferGateway.php:939
@@ -410,7 +410,7 @@ msgstr "Anweisungen zur Banküberweisung"
 #: src/Gateway/BankTransferGateway.php:719
 #: src/Gateway/BankTransferGateway.php:940
 msgid "Please transfer the funds to the following bank account:"
-msgstr "Bitte überweise den Betrag auf das folgende Bankkonto:"
+msgstr "Bitte überweisen Sie den Betrag auf das folgende Bankkonto:"
 
 #: src/Gateway/BankTransferGateway.php:831
 #: src/Gateway/BankTransferGateway.php:837
@@ -453,7 +453,7 @@ msgstr "Vollständige Anweisungen ansehen"
 #: src/Gateway/BankTransferGateway.php:764
 #: src/Gateway/BankTransferGateway.php:966
 msgid "Important: Please include your order number as the payment reference."
-msgstr "Wichtig: Bitte gib deine Bestellnummer als Verwendungszweck an."
+msgstr "Wichtig: Bitte geben Sie Ihre Bestellnummer als Verwendungszweck an."
 
 #: src/Plugin.php:90
 #: src/Plugin.php:125
@@ -527,17 +527,17 @@ msgid "Bank transfer instructions have been updated."
 msgstr "Die Anweisungen zur Banküberweisung wurden aktualisiert."
 
 #. Plugin URI of the plugin
-#: bank-transfer-payments-for-woocommerce.php
-msgid "https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce"
+#: zirkel-iban-for-woocommerce.php
+msgid "https://github.com/zirkeldesign/zirkel-iban-for-woocommerce"
 msgstr ""
 
 #. Author of the plugin
-#: bank-transfer-payments-for-woocommerce.php
+#: zirkel-iban-for-woocommerce.php
 msgid "zirkel.design"
 msgstr ""
 
 #. Author URI of the plugin
-#: bank-transfer-payments-for-woocommerce.php
+#: zirkel-iban-for-woocommerce.php
 msgid "https://zirkel.design"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr "Zahlung ausstehend"
 
 #: src/Gateway/BankTransferGateway.php:893
 msgid "Scan this GiroCode with your banking app to pre-fill the transfer."
-msgstr "Scanne diesen GiroCode mit deiner Banking-App, um die Überweisung vorauszufüllen."
+msgstr "Scannen Sie diesen GiroCode mit Ihrer Banking-App, um die Überweisung vorauszufüllen."
 
 #: src/Gateway/BankTransferGateway.php:643
 msgid "Order could not be loaded."
@@ -649,31 +649,31 @@ msgstr "Wird an die Kundschaft gesendet, wenn eine Bestellung auf eine Banküber
 
 #: src/Email/AwaitingTransferEmail.php:52
 msgid "Your order {order_number} — bank transfer details"
-msgstr "Deine Bestellung {order_number} – Bankverbindung für die Überweisung"
+msgstr "Ihre Bestellung {order_number} – Bankverbindung für die Überweisung"
 
 #: src/Email/AwaitingTransferEmail.php:57
 msgid "Please transfer the amount due"
-msgstr "Bitte überweise den offenen Betrag"
+msgstr "Bitte überweisen Sie den offenen Betrag"
 
 #: src/Email/AwaitingTransferEmail.php:128
 msgid "Your order ships as soon as the transfer arrives. Bank transfers usually take one to three business days."
-msgstr "Deine Bestellung wird versendet, sobald die Überweisung eingegangen ist. Banküberweisungen dauern in der Regel ein bis drei Werktage."
+msgstr "Ihre Bestellung wird versendet, sobald die Überweisung eingegangen ist. Banküberweisungen dauern in der Regel ein bis drei Werktage."
 
 #: src/Gateway/BankTransferGateway.php:786
 msgid "Your bank checks the recipient name against the IBAN before releasing the transfer. Please enter the account holder name exactly as shown above. The payment is handled by our payment provider, so this name can differ from our shop name - that is normal."
-msgstr "Deine Bank prüft den Empfängernamen gegen die IBAN, bevor die Überweisung ausgeführt wird. Bitte übernimm den Kontoinhaber genau so, wie er oben steht. Die Zahlung wickelt unser Zahlungsdienstleister ab, deshalb kann dieser Name von unserem Shop-Namen abweichen - das ist normal."
+msgstr "Ihre Bank prüft den Empfängernamen gegen die IBAN, bevor die Überweisung ausgeführt wird. Bitte übernehmen Sie den Kontoinhaber genau so, wie er oben steht. Die Zahlung wickelt unser Zahlungsdienstleister ab, deshalb kann dieser Name von unserem Shop-Namen abweichen - das ist normal."
 
 #. translators: %s: Customer first name.
 #: templates/emails/customer-awaiting-transfer.php:20
 #: templates/emails/plain/customer-awaiting-transfer.php:19
 #, php-format
 msgid "Hi %s,"
-msgstr "Hallo %s,"
+msgstr "Guten Tag %s,"
 
 #: templates/emails/customer-awaiting-transfer.php:24
 #: templates/emails/plain/customer-awaiting-transfer.php:24
 msgid "Thanks for your order. Please transfer the amount due using the bank details below — your order is reserved until the money arrives."
-msgstr "Vielen Dank für deine Bestellung. Bitte überweise den offenen Betrag auf die unten stehende Bankverbindung – deine Bestellung ist bis zum Zahlungseingang für dich reserviert."
+msgstr "Vielen Dank für Ihre Bestellung. Bitte überweisen Sie den offenen Betrag auf die unten stehende Bankverbindung – Ihre Bestellung ist bis zum Zahlungseingang für Sie reserviert."
 
 #: templates/emails/plain/customer-awaiting-transfer.php:30
 msgid "Payment reference:"

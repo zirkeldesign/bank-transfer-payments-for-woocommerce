@@ -34,7 +34,7 @@ echo "✓ $(basename "$KEY_FILE") updated ($(wc -c < "$KEY_FILE" | tr -d ' ') by
 # is where it leaks from most easily - a stray `wp option get` prints it.
 for env in \
     "$ROOT/.wp-integration" \
-    "$ROOT/../bank-transfer-payments-for-woocommerce-pro/.wp-integration"
+    "$ROOT/../zirkel-iban-for-woocommerce-pro/.wp-integration"
 do
     [[ -d "$env" ]] || continue
     BTPW_NEW_KEY="$NEW_KEY" php -d memory_limit=1024M "$WP_BIN" eval '

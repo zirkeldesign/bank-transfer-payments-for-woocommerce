@@ -87,13 +87,13 @@ final class Plugin
     {
         add_action('init', static function (): void {
             register_post_status('wc-awaiting-transfer', [
-                'label' => _x('Awaiting Bank Transfer', 'Order status', 'bank-transfer-payments-for-woocommerce'),
+                'label' => _x('Awaiting Bank Transfer', 'Order status', 'zirkel-iban-for-woocommerce'),
                 'public' => true,
                 'exclude_from_search' => false,
                 'show_in_admin_all_list' => true,
                 'show_in_admin_status_list' => true,
                 /* translators: %s: Order count. */
-                'label_count' => _n_noop('Awaiting bank transfer <span class="count">(%s)</span>', 'Awaiting bank transfer <span class="count">(%s)</span>', 'bank-transfer-payments-for-woocommerce'),
+                'label_count' => _n_noop('Awaiting bank transfer <span class="count">(%s)</span>', 'Awaiting bank transfer <span class="count">(%s)</span>', 'zirkel-iban-for-woocommerce'),
             ]);
         });
 
@@ -122,7 +122,7 @@ final class Plugin
                 $reordered[$key] = $label;
 
                 if ($key === 'wc-on-hold') {
-                    $reordered['wc-awaiting-transfer'] = _x('Awaiting Bank Transfer', 'Order status', 'bank-transfer-payments-for-woocommerce');
+                    $reordered['wc-awaiting-transfer'] = _x('Awaiting Bank Transfer', 'Order status', 'zirkel-iban-for-woocommerce');
                 }
             }
 

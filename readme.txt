@@ -1,4 +1,4 @@
-=== Bank Transfer Payments for WooCommerce ===
+=== Zirkel Virtual IBAN for WooCommerce ===
 Contributors: dsturm
 Tags: bank transfer, vorkasse, banküberweisung, sepa, iban
 Requires at least: 6.5
@@ -12,7 +12,7 @@ Accept reconciled bank transfer payments in WooCommerce via Stripe. Each order g
 
 == Description ==
 
-Bank Transfer Payments for WooCommerce lets your store accept bank transfers the modern way: powered by Stripe's customer_balance funding flow, every order receives its **own unique virtual bank account** (SEPA IBAN, UK Bacs, US ACH, Mexican SPEI or Japanese Zengin). When the customer sends the transfer, a Stripe webhook marks the order paid **automatically** — no manual bank-statement matching.
+Zirkel Virtual IBAN for WooCommerce lets your store accept bank transfers the modern way: powered by Stripe's customer_balance funding flow, every order receives its **own unique virtual bank account** (SEPA IBAN, UK Bacs, US ACH, Mexican SPEI or Japanese Zengin). When the customer sends the transfer, a Stripe webhook marks the order paid **automatically** — no manual bank-statement matching.
 
 Built DACH-first: SEPA / EUR is the default, with a German (Sie and Du) interface.
 

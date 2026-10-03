@@ -26,7 +26,7 @@ final class WpSwingsStripeAdapter implements StripePluginAdapter
     public function label(): string
     {
         /* translators: Third-party plugin name shown in the integration notice. */
-        return __('Payment Gateway Stripe and WooCommerce Integration', 'bank-transfer-payments-for-woocommerce');
+        return __('Payment Gateway Stripe and WooCommerce Integration', 'zirkel-iban-for-woocommerce');
     }
 
     public function isActive(): bool

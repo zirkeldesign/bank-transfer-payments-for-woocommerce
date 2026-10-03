@@ -16,7 +16,7 @@
 set -euo pipefail
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CORE_DIR="${BTPW_CORE_SOURCE:-$(cd "$PLUGIN_DIR/../bank-transfer-payments-for-woocommerce" 2>/dev/null && pwd || true)}"
+CORE_DIR="${BTPW_CORE_SOURCE:-$(cd "$PLUGIN_DIR/../zirkel-iban-for-woocommerce" 2>/dev/null && pwd || true)}"
 WP_DIR="${BTPW_WP_ROOT:-$PLUGIN_DIR/.wp-integration}"
 WP_VERSION="${BTPW_WP_VERSION:-latest}"
 PLUGINS_DIR="$WP_DIR/wp-content/plugins"
@@ -67,9 +67,9 @@ wp plugin install woocommerce --path="$WP_DIR" --activate --force --quiet
 
 # --- the plugin under test --------------------------------------------------
 echo "› Linking the plugin under test"
-rm -rf "$PLUGINS_DIR/bank-transfer-payments-for-woocommerce"
-ln -s "$PLUGIN_DIR" "$PLUGINS_DIR/bank-transfer-payments-for-woocommerce"
-wp plugin activate bank-transfer-payments-for-woocommerce --path="$WP_DIR" --quiet || true
+rm -rf "$PLUGINS_DIR/zirkel-iban-for-woocommerce"
+ln -s "$PLUGIN_DIR" "$PLUGINS_DIR/zirkel-iban-for-woocommerce"
+wp plugin activate zirkel-iban-for-woocommerce --path="$WP_DIR" --quiet || true
 
 # --- storefront the browser suite can actually reach -------------------------
 # None of this matters to the PHP integration suite, which boots WordPress in

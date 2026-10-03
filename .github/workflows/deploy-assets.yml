@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SLUG: bank-transfer-payments-for-woocommerce
+      SLUG: zirkel-iban-for-woocommerce
 
     steps:
       - uses: actions/checkout@v4

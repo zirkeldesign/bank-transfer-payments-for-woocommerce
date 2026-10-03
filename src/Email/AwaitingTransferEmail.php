@@ -28,8 +28,8 @@ final class AwaitingTransferEmail extends WC_Email
     {
         $this->id = 'btpw_awaiting_transfer';
         $this->customer_email = true;
-        $this->title = __('Bank transfer details', 'bank-transfer-payments-for-woocommerce');
-        $this->description = __('Sent to the customer when an order is waiting for a bank transfer, containing the account details to pay into.', 'bank-transfer-payments-for-woocommerce');
+        $this->title = __('Bank transfer details', 'zirkel-iban-for-woocommerce');
+        $this->description = __('Sent to the customer when an order is waiting for a bank transfer, containing the account details to pay into.', 'zirkel-iban-for-woocommerce');
 
         $this->template_html = 'emails/customer-awaiting-transfer.php';
         $this->template_plain = 'emails/plain/customer-awaiting-transfer.php';
@@ -49,12 +49,12 @@ final class AwaitingTransferEmail extends WC_Email
 
     public function get_default_subject(): string
     {
-        return __('Your order {order_number} — bank transfer details', 'bank-transfer-payments-for-woocommerce');
+        return __('Your order {order_number} — bank transfer details', 'zirkel-iban-for-woocommerce');
     }
 
     public function get_default_heading(): string
     {
-        return __('Please transfer the amount due', 'bank-transfer-payments-for-woocommerce');
+        return __('Please transfer the amount due', 'zirkel-iban-for-woocommerce');
     }
 
     /**
@@ -125,6 +125,6 @@ final class AwaitingTransferEmail extends WC_Email
 
     public function get_default_additional_content(): string
     {
-        return __('Your order ships as soon as the transfer arrives. Bank transfers usually take one to three business days.', 'bank-transfer-payments-for-woocommerce');
+        return __('Your order ships as soon as the transfer arrives. Bank transfers usually take one to three business days.', 'zirkel-iban-for-woocommerce');
     }
 }

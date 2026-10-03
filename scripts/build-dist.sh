@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-SLUG="bank-transfer-payments-for-woocommerce"
+SLUG="zirkel-iban-for-woocommerce"
 STRAUSS_VERSION="0.29.0"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"

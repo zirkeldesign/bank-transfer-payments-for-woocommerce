@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Plugin Name:       Bank Transfer Payments for WooCommerce
- * Plugin URI:        https://github.com/zirkeldesign/bank-transfer-payments-for-woocommerce
+ * Plugin Name:       Zirkel Virtual IBAN for WooCommerce
+ * Plugin URI:        https://github.com/zirkeldesign/zirkel-iban-for-woocommerce
  * Description:       Accept reconciled bank transfer payments in WooCommerce via Stripe. Each order gets unique virtual bank account details (SEPA/ACH/Bacs/SPEI), and webhooks mark the order paid automatically.
  * Version:           1.0.1
  * Author:            zirkel.design
  * Author URI:        https://zirkel.design
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       bank-transfer-payments-for-woocommerce
+ * Text Domain:       zirkel-iban-for-woocommerce
  * Domain Path:       /languages
  * Requires PHP:      8.3
  * Requires at least: 6.5
@@ -61,7 +61,7 @@ add_action('plugins_loaded', static function (): void {
 
             printf(
                 '<div class="notice notice-error"><p>%s</p></div>',
-                esc_html__('Bank Transfer Payments for WooCommerce requires WooCommerce to be installed and activated.', 'bank-transfer-payments-for-woocommerce')
+                esc_html__('Zirkel Virtual IBAN for WooCommerce requires WooCommerce to be installed and activated.', 'zirkel-iban-for-woocommerce')
             );
         });
 
@@ -85,7 +85,7 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), static function (ar
     $settingsUrl = admin_url('admin.php?page=wc-settings&tab=checkout&section=stripe_bank_transfer');
     array_unshift(
         $links,
-        '<a href="'.esc_url($settingsUrl).'">'.esc_html__('Settings', 'bank-transfer-payments-for-woocommerce').'</a>'
+        '<a href="'.esc_url($settingsUrl).'">'.esc_html__('Settings', 'zirkel-iban-for-woocommerce').'</a>'
     );
 
     return $links;

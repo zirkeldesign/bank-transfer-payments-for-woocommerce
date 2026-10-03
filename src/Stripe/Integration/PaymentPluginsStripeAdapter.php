@@ -24,7 +24,7 @@ final class PaymentPluginsStripeAdapter implements StripePluginAdapter
     public function label(): string
     {
         /* translators: Third-party plugin name shown in the integration notice. */
-        return __('Payment Plugins for Stripe WooCommerce', 'bank-transfer-payments-for-woocommerce');
+        return __('Payment Plugins for Stripe WooCommerce', 'zirkel-iban-for-woocommerce');
     }
 
     public function isActive(): bool

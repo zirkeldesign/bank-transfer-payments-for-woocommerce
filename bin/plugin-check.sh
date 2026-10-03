@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-SLUG="bank-transfer-payments-for-woocommerce"
+SLUG="zirkel-iban-for-woocommerce"
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PLUGIN_DIR"
 

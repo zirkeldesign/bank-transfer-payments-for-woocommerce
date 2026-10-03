@@ -37,7 +37,7 @@ final class CustomerBalanceDisplay
      */
     private ?object $gateway = null;
 
-    public const REST_NAMESPACE = 'bank-transfer-payments-for-woocommerce/v1';
+    public const REST_NAMESPACE = 'zirkel-iban-for-woocommerce/v1';
 
     public function register(): void
     {
@@ -101,10 +101,10 @@ final class CustomerBalanceDisplay
             'restUrl' => rest_url(self::REST_NAMESPACE.'/funding-instructions'),
             'nonce' => wp_create_nonce('wp_rest'),
             'strings' => [
-                'created' => __('Virtual bank account created successfully!', 'bank-transfer-payments-for-woocommerce'),
-                'errorPrefix' => __('Error: ', 'bank-transfer-payments-for-woocommerce'),
-                'unknownError' => __('Unknown error', 'bank-transfer-payments-for-woocommerce'),
-                'genericError' => __('An error occurred. Please try again.', 'bank-transfer-payments-for-woocommerce'),
+                'created' => __('Virtual bank account created successfully!', 'zirkel-iban-for-woocommerce'),
+                'errorPrefix' => __('Error: ', 'zirkel-iban-for-woocommerce'),
+                'unknownError' => __('Unknown error', 'zirkel-iban-for-woocommerce'),
+                'genericError' => __('An error occurred. Please try again.', 'zirkel-iban-for-woocommerce'),
             ],
         ]);
     }
@@ -156,14 +156,14 @@ final class CustomerBalanceDisplay
             return;
         }
 
-        echo '<h2>'.esc_html__('Stripe Customer Balance', 'bank-transfer-payments-for-woocommerce').'</h2>';
+        echo '<h2>'.esc_html__('Stripe Customer Balance', 'zirkel-iban-for-woocommerce').'</h2>';
         echo '<div class="btpw-customer-balance-section">';
 
         $testmode = (bool) ($this->gateway?->get_option('testmode') === 'yes');
         $stripeCustomerId = PluginIntegration::getStripeCustomerId($user->ID, $testmode);
 
         if ($stripeCustomerId === false) {
-            echo '<p>'.esc_html__('No Stripe customer ID found for this user.', 'bank-transfer-payments-for-woocommerce').'</p>';
+            echo '<p>'.esc_html__('No Stripe customer ID found for this user.', 'zirkel-iban-for-woocommerce').'</p>';
             echo '</div>';
 
             return;
@@ -177,7 +177,7 @@ final class CustomerBalanceDisplay
             echo '<table class="form-table" role="presentation">';
 
             echo '<tr>';
-            echo '<th scope="row">'.esc_html__('Stripe Customer ID', 'bank-transfer-payments-for-woocommerce').'</th>';
+            echo '<th scope="row">'.esc_html__('Stripe Customer ID', 'zirkel-iban-for-woocommerce').'</th>';
             echo '<td><code>'.esc_html($customer->id).'</code></td>';
             echo '</tr>';
 
@@ -185,7 +185,7 @@ final class CustomerBalanceDisplay
 
             if (isset($customer->currency)) {
                 echo '<tr>';
-                echo '<th scope="row">'.esc_html__('Default Currency', 'bank-transfer-payments-for-woocommerce').'</th>';
+                echo '<th scope="row">'.esc_html__('Default Currency', 'zirkel-iban-for-woocommerce').'</th>';
                 echo '<td>'.esc_html(strtoupper((string) $customer->currency)).'</td>';
                 echo '</tr>';
             }
@@ -194,8 +194,8 @@ final class CustomerBalanceDisplay
             $dashboardUrl = 'https://dashboard.stripe.com/'.$mode.'customers/'.$customer->id;
 
             echo '<tr>';
-            echo '<th scope="row">'.esc_html__('Stripe Dashboard', 'bank-transfer-payments-for-woocommerce').'</th>';
-            echo '<td><a href="'.esc_url($dashboardUrl).'" target="_blank" rel="noopener" class="button">'.esc_html__('View in Stripe', 'bank-transfer-payments-for-woocommerce').' →</a></td>';
+            echo '<th scope="row">'.esc_html__('Stripe Dashboard', 'zirkel-iban-for-woocommerce').'</th>';
+            echo '<td><a href="'.esc_url($dashboardUrl).'" target="_blank" rel="noopener" class="button">'.esc_html__('View in Stripe', 'zirkel-iban-for-woocommerce').' →</a></td>';
             echo '</tr>';
 
             echo '</table>';
@@ -203,7 +203,7 @@ final class CustomerBalanceDisplay
             $this->display_cash_balance_transactions($stripeCustomerId, $user);
         } catch (Throwable $e) {
             echo '<div class="notice notice-error inline"><p>';
-            echo esc_html__('Error fetching customer data from Stripe: ', 'bank-transfer-payments-for-woocommerce').esc_html($e->getMessage());
+            echo esc_html__('Error fetching customer data from Stripe: ', 'zirkel-iban-for-woocommerce').esc_html($e->getMessage());
             echo '</p></div>';
         }
 
@@ -225,7 +225,7 @@ final class CustomerBalanceDisplay
         if (is_array($available)) {
             foreach ($available as $currency => $amount) {
                 if ($amount != 0) {
-                    $this->render_balance_cell((int) $amount, (string) $currency, __('Available funds from bank transfer payments.', 'bank-transfer-payments-for-woocommerce'));
+                    $this->render_balance_cell((int) $amount, (string) $currency, __('Available funds from bank transfer payments.', 'zirkel-iban-for-woocommerce'));
                     $shown = true;
                 }
             }
@@ -244,7 +244,7 @@ final class CustomerBalanceDisplay
                 }
 
                 foreach ($byCurrency as $currency => $amount) {
-                    $this->render_balance_cell((int) $amount, (string) $currency, __('Calculated from transaction history.', 'bank-transfer-payments-for-woocommerce'));
+                    $this->render_balance_cell((int) $amount, (string) $currency, __('Calculated from transaction history.', 'zirkel-iban-for-woocommerce'));
                     $shown = true;
                 }
             } catch (Throwable) {
@@ -253,7 +253,7 @@ final class CustomerBalanceDisplay
         }
 
         if (! $shown) {
-            $this->render_balance_cell(0, (string) ($customer->currency ?? 'usd'), __('No funds received yet via bank transfers.', 'bank-transfer-payments-for-woocommerce'));
+            $this->render_balance_cell(0, (string) ($customer->currency ?? 'usd'), __('No funds received yet via bank transfers.', 'zirkel-iban-for-woocommerce'));
         }
     }
 
@@ -262,7 +262,7 @@ final class CustomerBalanceDisplay
         $class = $amount < 0 ? 'negative' : ($amount > 0 ? 'positive' : 'zero');
 
         echo '<tr>';
-        echo '<th scope="row">'.esc_html__('Cash Balance (Virtual Bank Account)', 'bank-transfer-payments-for-woocommerce').'</th>';
+        echo '<th scope="row">'.esc_html__('Cash Balance (Virtual Bank Account)', 'zirkel-iban-for-woocommerce').'</th>';
         echo '<td>';
         echo '<span class="btpw-balance btpw-balance-'.esc_attr($class).'">'.wp_kses_post($this->format_stripe_amount($amount, $currency)).'</span>';
         echo '<p class="description">'.esc_html($description).'</p>';
@@ -279,21 +279,21 @@ final class CustomerBalanceDisplay
             $stripe = $this->stripe;
             $transactions = $stripe->customers->allCashBalanceTransactions($customerId, ['limit' => 10]);
 
-            echo '<h3>'.esc_html__('Cash Balance Transactions', 'bank-transfer-payments-for-woocommerce').'</h3>';
+            echo '<h3>'.esc_html__('Cash Balance Transactions', 'zirkel-iban-for-woocommerce').'</h3>';
 
             if (empty($transactions->data)) {
-                echo '<p>'.esc_html__('No cash balance transactions yet.', 'bank-transfer-payments-for-woocommerce').'</p>';
+                echo '<p>'.esc_html__('No cash balance transactions yet.', 'zirkel-iban-for-woocommerce').'</p>';
 
                 return;
             }
 
             echo '<table class="widefat striped">';
             echo '<thead><tr>';
-            echo '<th>'.esc_html__('Date', 'bank-transfer-payments-for-woocommerce').'</th>';
-            echo '<th>'.esc_html__('Type', 'bank-transfer-payments-for-woocommerce').'</th>';
-            echo '<th>'.esc_html__('Amount', 'bank-transfer-payments-for-woocommerce').'</th>';
-            echo '<th>'.esc_html__('Status', 'bank-transfer-payments-for-woocommerce').'</th>';
-            echo '<th>'.esc_html__('Details', 'bank-transfer-payments-for-woocommerce').'</th>';
+            echo '<th>'.esc_html__('Date', 'zirkel-iban-for-woocommerce').'</th>';
+            echo '<th>'.esc_html__('Type', 'zirkel-iban-for-woocommerce').'</th>';
+            echo '<th>'.esc_html__('Amount', 'zirkel-iban-for-woocommerce').'</th>';
+            echo '<th>'.esc_html__('Status', 'zirkel-iban-for-woocommerce').'</th>';
+            echo '<th>'.esc_html__('Details', 'zirkel-iban-for-woocommerce').'</th>';
             echo '</tr></thead><tbody>';
 
             foreach ($transactions->data as $transaction) {
@@ -308,11 +308,11 @@ final class CustomerBalanceDisplay
 
                 $details = '—';
                 if (isset($transaction->applied_to_payment)) {
-                    $details = __('Applied to payment', 'bank-transfer-payments-for-woocommerce');
+                    $details = __('Applied to payment', 'zirkel-iban-for-woocommerce');
                 } elseif (isset($transaction->funded)) {
-                    $details = __('Funded', 'bank-transfer-payments-for-woocommerce');
+                    $details = __('Funded', 'zirkel-iban-for-woocommerce');
                 } elseif (isset($transaction->refunded_from_payment)) {
-                    $details = __('Refunded from payment', 'bank-transfer-payments-for-woocommerce');
+                    $details = __('Refunded from payment', 'zirkel-iban-for-woocommerce');
                 }
                 echo '<td>'.esc_html($details).'</td>';
                 echo '</tr>';
@@ -326,7 +326,7 @@ final class CustomerBalanceDisplay
 
     private function display_financial_addresses(string $customerId, WP_User $user): bool
     {
-        echo '<h3>'.esc_html__('Virtual Bank Account Details', 'bank-transfer-payments-for-woocommerce').'</h3>';
+        echo '<h3>'.esc_html__('Virtual Bank Account Details', 'zirkel-iban-for-woocommerce').'</h3>';
 
         $hasAddresses = false;
 
@@ -336,7 +336,7 @@ final class CustomerBalanceDisplay
             $response = $stripe->request('get', '/v1/customers/'.$customerId.'/funding_instructions', [], []);
 
             if (! empty($response->data)) {
-                echo '<p class="description btpw-addresses-intro">'.esc_html__('These are unique bank account details for this customer to receive bank transfers.', 'bank-transfer-payments-for-woocommerce').'</p>';
+                echo '<p class="description btpw-addresses-intro">'.esc_html__('These are unique bank account details for this customer to receive bank transfers.', 'zirkel-iban-for-woocommerce').'</p>';
 
                 foreach ($response->data as $instruction) {
                     if (isset($instruction->bank_transfer->financial_addresses)) {
@@ -352,13 +352,13 @@ final class CustomerBalanceDisplay
         }
 
         if (! $hasAddresses) {
-            echo '<p>'.esc_html__('No virtual bank account created yet.', 'bank-transfer-payments-for-woocommerce').'</p>';
+            echo '<p>'.esc_html__('No virtual bank account created yet.', 'zirkel-iban-for-woocommerce').'</p>';
             echo '<div class="btpw-create-account">';
             echo '<button type="button" class="button button-primary" id="btpw-create-financial-address" data-customer-id="'.esc_attr($customerId).'" data-user-id="'.esc_attr((string) $user->ID).'">';
-            echo esc_html__('Create Virtual Bank Account', 'bank-transfer-payments-for-woocommerce');
+            echo esc_html__('Create Virtual Bank Account', 'zirkel-iban-for-woocommerce');
             echo '</button>';
             echo '<span class="spinner"></span>';
-            echo '<p class="description">'.esc_html__('Generates unique bank account details for this customer to receive transfers.', 'bank-transfer-payments-for-woocommerce').'</p>';
+            echo '<p class="description">'.esc_html__('Generates unique bank account details for this customer to receive transfers.', 'zirkel-iban-for-woocommerce').'</p>';
             echo '</div>';
         }
 
@@ -378,7 +378,7 @@ final class CustomerBalanceDisplay
         }
 
         echo '<div class="btpw-address-box">';
-        echo '<h4>'.esc_html(strtoupper((string) $address->type)).' '.esc_html__('Bank Account', 'bank-transfer-payments-for-woocommerce').'</h4>';
+        echo '<h4>'.esc_html(strtoupper((string) $address->type)).' '.esc_html__('Bank Account', 'zirkel-iban-for-woocommerce').'</h4>';
         echo '<table class="widefat btpw-address-table"><tbody>';
 
         foreach ($rows as [$label, $value, $isCode]) {
@@ -388,7 +388,7 @@ final class CustomerBalanceDisplay
         }
 
         if (isset($address->supported_networks) && is_array($address->supported_networks)) {
-            echo '<tr><th>'.esc_html__('Supported Networks', 'bank-transfer-payments-for-woocommerce').'</th>';
+            echo '<tr><th>'.esc_html__('Supported Networks', 'zirkel-iban-for-woocommerce').'</th>';
             echo '<td>'.esc_html(implode(', ', array_map('strtoupper', $address->supported_networks))).'</td></tr>';
         }
 
@@ -411,33 +411,33 @@ final class CustomerBalanceDisplay
 
         return match ($type) {
             'aba' => [
-                [__('Account Number', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
-                [__('Routing Number', 'bank-transfer-payments-for-woocommerce'), (string) ($data->routing_number ?? '—'), true],
-                [__('Bank Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
-                [__('Account Holder Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
+                [__('Account Number', 'zirkel-iban-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
+                [__('Routing Number', 'zirkel-iban-for-woocommerce'), (string) ($data->routing_number ?? '—'), true],
+                [__('Bank Name', 'zirkel-iban-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
+                [__('Account Holder Name', 'zirkel-iban-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
             ],
             'iban' => [
-                [__('IBAN', 'bank-transfer-payments-for-woocommerce'), (string) ($data->iban ?? '—'), true],
-                [__('BIC/SWIFT', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bic ?? $data->swift_code ?? $data->swift ?? '—'), true],
-                [__('Bank Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
-                [__('Account Holder Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
+                [__('IBAN', 'zirkel-iban-for-woocommerce'), (string) ($data->iban ?? '—'), true],
+                [__('BIC/SWIFT', 'zirkel-iban-for-woocommerce'), (string) ($data->bic ?? $data->swift_code ?? $data->swift ?? '—'), true],
+                [__('Bank Name', 'zirkel-iban-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
+                [__('Account Holder Name', 'zirkel-iban-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
             ],
             'sort_code' => [
-                [__('Account Number', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
-                [__('Sort Code', 'bank-transfer-payments-for-woocommerce'), (string) ($data->sort_code ?? '—'), true],
-                [__('Bank Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
-                [__('Account Holder Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
+                [__('Account Number', 'zirkel-iban-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
+                [__('Sort Code', 'zirkel-iban-for-woocommerce'), (string) ($data->sort_code ?? '—'), true],
+                [__('Bank Name', 'zirkel-iban-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
+                [__('Account Holder Name', 'zirkel-iban-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
             ],
             'spei' => [
-                [__('CLABE', 'bank-transfer-payments-for-woocommerce'), (string) ($data->clabe ?? '—'), true],
-                [__('Bank Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
-                [__('Account Holder Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
+                [__('CLABE', 'zirkel-iban-for-woocommerce'), (string) ($data->clabe ?? '—'), true],
+                [__('Bank Name', 'zirkel-iban-for-woocommerce'), (string) ($data->bank_name ?? '—'), false],
+                [__('Account Holder Name', 'zirkel-iban-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
             ],
             'zengin' => [
-                [__('Account Number', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
-                [__('Bank Code', 'bank-transfer-payments-for-woocommerce'), (string) ($data->bank_code ?? '—'), true],
-                [__('Branch Code', 'bank-transfer-payments-for-woocommerce'), (string) ($data->branch_code ?? '—'), true],
-                [__('Account Holder Name', 'bank-transfer-payments-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
+                [__('Account Number', 'zirkel-iban-for-woocommerce'), (string) ($data->account_number ?? '—'), true],
+                [__('Bank Code', 'zirkel-iban-for-woocommerce'), (string) ($data->bank_code ?? '—'), true],
+                [__('Branch Code', 'zirkel-iban-for-woocommerce'), (string) ($data->branch_code ?? '—'), true],
+                [__('Account Holder Name', 'zirkel-iban-for-woocommerce'), (string) ($data->account_holder_name ?? '—'), false],
             ],
             default => [],
         };
@@ -458,11 +458,11 @@ final class CustomerBalanceDisplay
         $customerId = (string) get_user_meta($userId, '_stripe_customer_id', true);
 
         if ($customerId === '') {
-            return new WP_REST_Response(['message' => __('This user has no Stripe customer yet.', 'bank-transfer-payments-for-woocommerce')], 404);
+            return new WP_REST_Response(['message' => __('This user has no Stripe customer yet.', 'zirkel-iban-for-woocommerce')], 404);
         }
 
         if (! $this->init_stripe() || $this->stripe === null || $this->gateway === null) {
-            return new WP_REST_Response(['message' => __('Stripe connection failed', 'bank-transfer-payments-for-woocommerce')], 500);
+            return new WP_REST_Response(['message' => __('Stripe connection failed', 'zirkel-iban-for-woocommerce')], 500);
         }
 
         try {
@@ -478,7 +478,7 @@ final class CustomerBalanceDisplay
             ], []);
 
             return new WP_REST_Response([
-                'message' => __('Virtual bank account created successfully', 'bank-transfer-payments-for-woocommerce'),
+                'message' => __('Virtual bank account created successfully', 'zirkel-iban-for-woocommerce'),
                 'funding_instructions' => $response->id ?? null,
             ], 201);
         } catch (Throwable $e) {
@@ -488,11 +488,11 @@ final class CustomerBalanceDisplay
             if (function_exists('wc_get_logger')) {
                 wc_get_logger()->error(
                     'Funding instructions failed: '.$e->getMessage(),
-                    ['source' => 'bank-transfer-payments-for-woocommerce']
+                    ['source' => 'zirkel-iban-for-woocommerce']
                 );
             }
 
-            return new WP_REST_Response(['message' => __('Could not create the virtual bank account. See the WooCommerce logs for details.', 'bank-transfer-payments-for-woocommerce')], 502);
+            return new WP_REST_Response(['message' => __('Could not create the virtual bank account. See the WooCommerce logs for details.', 'zirkel-iban-for-woocommerce')], 502);
         }
     }
 

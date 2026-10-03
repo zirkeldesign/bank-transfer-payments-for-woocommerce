@@ -52,7 +52,7 @@ final class BlocksSupport extends AbstractPaymentMethodType
         );
 
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations($handle, 'bank-transfer-payments-for-woocommerce');
+            wp_set_script_translations($handle, 'zirkel-iban-for-woocommerce');
         }
 
         return [$handle];
@@ -66,9 +66,9 @@ final class BlocksSupport extends AbstractPaymentMethodType
     public function get_payment_method_data(): array
     {
         return [
-            'title' => $this->settings['title'] ?? __('Bank Transfer', 'bank-transfer-payments-for-woocommerce'),
+            'title' => $this->settings['title'] ?? __('Bank Transfer', 'zirkel-iban-for-woocommerce'),
             'description' => $this->settings['description'] ?? '',
-            'notice' => __('After placing your order, you will receive unique bank account details to complete your payment.', 'bank-transfer-payments-for-woocommerce'),
+            'notice' => __('After placing your order, you will receive unique bank account details to complete your payment.', 'zirkel-iban-for-woocommerce'),
             'supports' => ['products'],
         ];
     }

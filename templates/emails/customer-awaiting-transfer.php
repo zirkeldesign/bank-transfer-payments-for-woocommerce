@@ -17,11 +17,11 @@ do_action('woocommerce_email_header', $email_heading, $email); ?>
 
 <p><?php printf(
     /* translators: %s: Customer first name. */
-    esc_html__('Hi %s,', 'bank-transfer-payments-for-woocommerce'),
+    esc_html__('Hi %s,', 'zirkel-iban-for-woocommerce'),
     esc_html($order->get_billing_first_name())
 ); ?></p>
 
-<p><?php esc_html_e('Thanks for your order. Please transfer the amount due using the bank details below — your order is reserved until the money arrives.', 'bank-transfer-payments-for-woocommerce'); ?></p>
+<p><?php esc_html_e('Thanks for your order. Please transfer the amount due using the bank details below — your order is reserved until the money arrives.', 'zirkel-iban-for-woocommerce'); ?></p>
 
 <?php
 /*
